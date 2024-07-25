@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:physio_digital/auth/auth_service.dart';
 import 'package:physio_digital/view/components/my_button.dart';
 import 'package:physio_digital/view/components/my_text_field.dart';
 
@@ -15,7 +16,26 @@ class LoginPage extends StatelessWidget {
     required this.onTap,
   });
 
-  void login() {}
+  void login(BuildContext context) async {
+    // auth service
+    final authService = AuthService();
+
+    //try login
+    try {
+      await authService.SignInWithEmailPassword(
+          _emailController.text, _passwordController.text);
+    }
+
+    // catch any errors
+    catch (e) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(e.toString()),
+        ),
+      );
+    }
+  }
 
   void google() {}
 
@@ -52,7 +72,7 @@ class LoginPage extends StatelessWidget {
             const SizedBox(height: 16.0),
             MyButton(
               text: 'LogIn',
-              onTap: login,
+              onTap: () => login(context),
             ),
             const SizedBox(height: 16.0),
             Row(
