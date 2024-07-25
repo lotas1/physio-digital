@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "967395113627",
+    "project_id": "physio-digital-8d7b6",
+    "storage_bucket": "physio-digital-8d7b6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:967395113627:android:e598a778a83f88025be43e",
+        "android_client_info": {
+          "package_name": "com.example.physio_digital"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4phpARGhI357V--xc2lFDSwhT4M8bpgU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
