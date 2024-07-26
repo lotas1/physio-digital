@@ -52,7 +52,7 @@ class UpcomingEvents extends StatelessWidget {
 
   Widget _buildEventList() {
     return SizedBox(
-      height: 150,
+      height: 180,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
@@ -77,7 +77,7 @@ class UpcomingEvents extends StatelessWidget {
         Get.to(const ViewArticlePage());
       },
       child: Container(
-        width: 160,
+        width: 200,
         margin: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
           color: backgroundColor,

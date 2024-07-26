@@ -12,9 +12,6 @@ class OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return GetBuilder<OnboardingController>(
-    //   builder: (ctrl) {
-    //     try {
     return Scaffold(
       body: Stack(
         children: [

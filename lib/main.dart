@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:physio_digital/auth/auth_gate.dart';
 import 'package:physio_digital/bindings/registration_binding.dart';
-// import 'package:physio_digital/controllers/home_controller.dart';
+import 'package:physio_digital/controllers/home_controller.dart';
 import 'package:physio_digital/firebase_options.dart';
 import 'package:physio_digital/themes/light_mode.dart';
 import 'package:physio_digital/view/clinics/clinic.dart';
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // final HomeController homeController = Get.put(HomeController());
+    final HomeController homeController = Get.put(HomeController());
 
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,

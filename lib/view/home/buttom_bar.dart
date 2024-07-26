@@ -15,13 +15,13 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomeController homeController = Get.find();
+    final HomeController homeController = Get.find<HomeController>();
 
     return Obx(
       () =>  Container(
       height: 75.0,
-      decoration: const BoxDecoration(
-        color: Color.fromARGB(255, 41, 51, 100),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(15),
           topRight: Radius.circular(15),
@@ -71,7 +71,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             ),
           ],
           selectedItemColor: Colors.white,
-          unselectedItemColor: Colors.grey,
+          // unselectedItemColor: Colors.grey,
           backgroundColor: Colors.transparent,
           type: BottomNavigationBarType.fixed,
           showSelectedLabels: false,
@@ -109,7 +109,7 @@ class CustomIcon extends StatelessWidget {
           ),
         Icon(
           icon,
-          size: 18,
+          size: 20,
           color: isActive ? Colors.white : Colors.grey,
         ),
       ],

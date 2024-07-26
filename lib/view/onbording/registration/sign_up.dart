@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:physio_digital/auth/auth_service.dart';
 import 'package:physio_digital/view/components/my_button.dart';
 import 'package:physio_digital/view/components/my_text_field.dart';
 
@@ -16,7 +17,30 @@ class SignUpPage extends StatelessWidget {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  void signUp() {}
+  void signUp(BuildContext context) {
+    final _auth = AuthService();
+ 
+    //if the password match, create user
+    if(_passwordController.text == _confirmPasswordController.text){
+      try{
+        _auth.signUpWithEmailPassword(_emailController.text, _passwordController.text,);
+      }catch (e){
+        showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(e.toString()),
+        ),
+      );
+      }
+    }else{
+       showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('password does not match'),
+        ),
+      );
+    }
+  }
 
   void google() {}
 
@@ -59,7 +83,7 @@ class SignUpPage extends StatelessWidget {
             const SizedBox(height: 16.0),
             MyButton(
               text: 'Sign Up',
-              onTap: signUp,
+              onTap: () => signUp(context),
             ),
             const SizedBox(height: 16.0),
             Row(

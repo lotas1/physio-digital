@@ -1,4 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get/get.dart';
+import 'package:physio_digital/auth/login_or_signup.dart';
+import 'package:physio_digital/view/home/home_page.dart';
 
 class AuthService {
   //inistance of auth
@@ -12,14 +15,52 @@ class AuthService {
         password: password,
       );
       print('User signed in');
+      _navigateToHome();
       return userCredential;
     } on FirebaseAuthException catch (e) {
       throw Exception(e.code);
     }
   }
+
   // sign up
+  Future<UserCredential> signUpWithEmailPassword(
+    String email,
+    String password,
+  ) async {
+    try {
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      print('User signed up');
+      _navigateToHome();
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.code);
+    }
+  }
 
   // sign out
+  Future<void> signOut() async {
+    try {
+      await _auth.signOut();
+      _navigateToLogin();
+      print('User signed out');
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 
-  //errors
+  Stream<User?> get user {
+    return _auth.authStateChanges();
+  }
+
+  void _navigateToHome() {
+    Get.offAll(HomePage());
+  }
+
+  void _navigateToLogin() {
+    Get.offAll(LoginOrSignup());
+  }
 }

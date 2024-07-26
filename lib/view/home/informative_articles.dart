@@ -53,7 +53,7 @@ class InformativeArticles extends StatelessWidget {
 
   Widget _buildArticleList() {
     return SizedBox(
-      height: 150,
+      height: 180,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
@@ -78,7 +78,7 @@ class InformativeArticles extends StatelessWidget {
         Get.to(const ViewArticlePage());
       },
       child: Container(
-        width: 160,
+        width: 200,
         margin: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),

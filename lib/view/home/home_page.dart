@@ -45,13 +45,14 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     try {
       return Scaffold(
+        
         backgroundColor: const Color(0xFFF5F5F5),
         body: SingleChildScrollView(
           child: Column(
             children: [
               Container(
-                decoration: const BoxDecoration(
-                  color: Color(0xFF354AD9),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
                   borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(35),
                     bottomRight: Radius.circular(35),
@@ -62,6 +63,7 @@ class HomePageState extends State<HomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      SizedBox(height: 20,),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -130,25 +132,25 @@ class HomePageState extends State<HomePage> {
                       const SizedBox(
                         height: 10,
                       ),
-                      const Row(
-                        children: [
-                          Text.rich(
-                            TextSpan(
-                                text: "Good day, ",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: Color.fromARGB(255, 184, 184, 184)),
-                                children: [
-                                  TextSpan(
-                                    text: 'Christian 👋',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white),
-                                  )
-                                ]),
-                          )
-                        ],
-                      ),
+                      // const Row(
+                      //   children: [
+                      //     Text.rich(
+                      //       TextSpan(
+                      //           text: "Good day, ",
+                      //           style: TextStyle(
+                      //               fontSize: 18,
+                      //               color: Color.fromARGB(255, 184, 184, 184)),
+                      //           children: [
+                      //             TextSpan(
+                      //               text: 'Christian 👋',
+                      //               style: TextStyle(
+                      //                   fontWeight: FontWeight.bold,
+                      //                   color: Colors.white),
+                      //             )
+                      //           ]),
+                      //     )
+                      //   ],
+                      // ),
                       const SizedBox(
                         height: 10,
                       ),

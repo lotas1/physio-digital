@@ -53,7 +53,7 @@ class ClinicNearYou extends StatelessWidget {
 
   Widget _buildClinicList() {
     return SizedBox(
-      height: 150,
+      height: 180,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: [
@@ -72,15 +72,15 @@ class ClinicNearYou extends StatelessWidget {
         Get.to(const ClinicDetails());
       },
       child: Container(
-        width: 160,
+        width: 200,
         margin: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           boxShadow: const [
             BoxShadow(
               color: Colors.black26,
-              blurRadius: 6,
-              offset: Offset(0, 2),
+              blurRadius: 5,
+              offset: Offset(0, 1),
             ),
           ],
         ),

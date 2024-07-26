@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:physio_digital/models/products/product_model.dart';
+import 'package:physio_digital/view/components/my_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BuyNowButton extends StatelessWidget {
@@ -9,13 +10,13 @@ class BuyNowButton extends StatelessWidget {
 
   void _launchWhatsApp(BuildContext context) async {
     final Uri whatsappUrl = Uri.parse(
-      "https://wa.me/whatsappphonenumber/?text="
+      "https://wa.me/+2349032543740/?text="
       "Product: ${product.name}\n"
-      "Price: \$${product.price}\n"
+      "Price: \₦${product.price}\n"
       "Details: ${product.details}\n"
       "Image: ${product.imageUrl}",
     );
-    
+
     if (await canLaunchUrl(whatsappUrl)) {
       await launchUrl(whatsappUrl);
     } else {
@@ -25,24 +26,30 @@ class BuyNowButton extends StatelessWidget {
     }
   }
 
+  buyNow(BuildContext context) {
+    _launchWhatsApp(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () => _launchWhatsApp(context),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF354AD9) ,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.0),
-          ),
-          padding:const EdgeInsets.symmetric(vertical: 16.0),
-        ),
-        child: const Text(
-          'Buy Now',
-          style: TextStyle(fontSize: 16.0, color: Colors.white),
-        ),
-      ),
+      // child: ElevatedButton(
+      //   onPressed: () => _launchWhatsApp(context),
+      //   style: ElevatedButton.styleFrom(
+      //     backgroundColor: const Color(0xFF354AD9) ,
+      //     shape: RoundedRectangleBorder(
+      //       borderRadius: BorderRadius.circular(16.0),
+      //     ),
+      //     padding:const EdgeInsets.symmetric(vertical: 16.0),
+      //   ),
+      //   child: const Text(
+      //     'Buy Now',
+      //     style: TextStyle(fontSize: 16.0, color: Colors.white),
+      //   ),
+      // ),
+
+      child: MyButton(text: 'Buy Now', onTap: buyNow(context)),
     );
   }
 }
