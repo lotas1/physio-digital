@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    final HomeController homeController = Get.put(HomeController());
+    Get.put(HomeController());
 
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
