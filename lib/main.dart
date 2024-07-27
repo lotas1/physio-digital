@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:physio_digital/auth/auth_gate.dart';
+import 'package:physio_digital/services/auth/auth_gate.dart';
 import 'package:physio_digital/bindings/registration_binding.dart';
 import 'package:physio_digital/controllers/home_controller.dart';
 import 'package:physio_digital/firebase_options.dart';
@@ -29,11 +29,11 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       getPages: [
-      GetPage(name: '/', page: () => const HomePage()),
-      GetPage(name: '/marketplace', page: () => const ProductListPage()),
-      GetPage(name: '/clinic', page: () => const Clinic()),
-      GetPage(name: '/blog', page: () => const ListPostsPage()),
-      GetPage(name: '/profile', page: () => const UserProfile()),
+        GetPage(name: '/', page: () => const HomePage()),
+        GetPage(name: '/marketplace', page: () => const ProductListPage()),
+        GetPage(name: '/clinic', page: () => const Clinic()),
+        GetPage(name: '/blog', page: () => const ListPostsPage()),
+        GetPage(name: '/profile', page: () => const UserProfile()),
       ],
       theme: lightMode,
       home: const AuthGate(),

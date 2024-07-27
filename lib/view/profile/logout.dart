@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:physio_digital/auth/auth_service.dart';
+import 'package:physio_digital/services/auth/auth_service.dart';
 
 class LogoutButton extends StatelessWidget {
   LogoutButton({Key? key}) : super(key: key);

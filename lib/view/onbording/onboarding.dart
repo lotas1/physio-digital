@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:physio_digital/auth/login_or_signup.dart';
+import 'package:physio_digital/services/auth/login_or_signup.dart';
 import 'package:physio_digital/view/components/my_button.dart';
 
 class OnboardingPage extends StatelessWidget {

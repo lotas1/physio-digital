@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:physio_digital/auth/login_or_signup.dart';
+import 'package:physio_digital/services/auth/login_or_signup.dart';
 import 'package:physio_digital/view/home/home_page.dart';
 import 'package:physio_digital/view/onbording/onboarding.dart';
 import 'package:shared_preferences/shared_preferences.dart';
