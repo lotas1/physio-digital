@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:physio_digital/models/products/product_model.dart';
+import 'package:physio_digital/model/product/product.dart';
 
 class ProductInfoSection extends StatelessWidget {
   final Product product;
@@ -16,7 +16,7 @@ class ProductInfoSection extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(product.details),
+              child: Text(product.details ?? 'Unknown product'),
             ),
           ],
         ),
@@ -25,7 +25,7 @@ class ProductInfoSection extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(product.features),
+              child: Text(product.features ?? 'Unknown features'),
             ),
           ],
         ),

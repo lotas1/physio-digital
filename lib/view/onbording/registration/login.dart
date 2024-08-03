@@ -1,50 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:physio_digital/services/auth/auth_service.dart';
+import 'package:physio_digital/view/components/alert_dialog.dart';
 import 'package:physio_digital/view/components/my_button.dart';
 import 'package:physio_digital/view/components/my_text_field.dart';
 
-class LoginPage extends StatelessWidget {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-
-  // go to sign up page
+class LoginPage extends StatefulWidget {
   final void Function()? onTap;
 
-  LoginPage({
-    super.key,
+  const LoginPage({
+    Key? key,
     required this.onTap,
-  });
+  }) : super(key: key);
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   void login(BuildContext context) async {
-    // auth service
+    setState(() {
+      _isLoading = true;
+    });
+
     final authService = AuthService();
 
-    //try login
     try {
       await authService.SignInWithEmailPassword(
           _emailController.text, _passwordController.text);
-    }
-
-    // catch any errors
-    catch (e) {
+      // The AuthService should handle navigation after successful login
+      // If it doesn't, you can add navigation logic here
+      // For example:
+      // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
+    } catch (e) {
       showDialog(
         context: context,
-        builder: (context) => AlertDialog(
-          title: Text('invalid email or password'),
-        ),
+        builder: (BuildContext context) {
+          return ElegantAlertDialog(
+            title: 'Login Failed',
+            message: 'Invalid email or password. Please try again.',
+            onConfirm: () {
+              // Navigator.of(context).pop(); // Close the dialog
+            },
+          );
+        },
       );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
-  void google() {}
+  void google() {
+    // Implement Google sign-in logic here
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 50.0),
@@ -73,6 +93,7 @@ class LoginPage extends StatelessWidget {
             MyButton(
               text: 'LogIn',
               onTap: () => login(context),
+              isLoading: _isLoading,
             ),
             const SizedBox(height: 16.0),
             Row(
@@ -80,11 +101,10 @@ class LoginPage extends StatelessWidget {
               children: [
                 Text(
                   'Not a member? ',
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.secondary),
+                  style: TextStyle(color: Theme.of(context).colorScheme.secondary),
                 ),
                 GestureDetector(
-                  onTap: onTap,
+                  onTap: widget.onTap,
                   child: Text(
                     'SignUp Now',
                     style: TextStyle(
@@ -137,9 +157,11 @@ class LoginPage extends StatelessWidget {
             ),
             const SizedBox(height: 16.0),
             MyButton(
-                text: 'LogIn with Google',
-                icon: FontAwesomeIcons.google,
-                onTap: google)
+              text: 'LogIn with Google',
+              icon: FontAwesomeIcons.google,
+              onTap: google,
+              isLoading: false,
+            )
           ],
         ),
       ),

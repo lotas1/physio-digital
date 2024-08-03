@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:physio_digital/controllers/home_controller.dart';
+import 'package:physio_digital/services/auth/auth_service.dart';
 import 'package:physio_digital/view/home/buttom_bar.dart';
+import 'package:physio_digital/view/profile/about_section/section_content.dart';
+import 'package:physio_digital/view/profile/about_section/section_title.dart';
 import 'package:physio_digital/view/profile/logout.dart';
 import 'package:physio_digital/view/profile/profile_page.dart';
 import 'package:physio_digital/view/profile/profile_settings.dart';
 
 class UserProfile extends StatelessWidget {
   const UserProfile({Key? key}) : super(key: key);
+
+  void logout() {
+    try {
+      final AuthService _auth = AuthService();
+      _auth.signOut();
+    } catch (e) {
+      // Handle errors here
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +43,11 @@ class UserProfile extends StatelessWidget {
                 ),
               ],
             ),
-            height: 200,
+            height: 250,
+            padding: EdgeInsets.symmetric(vertical: 30),
             child: Column(
               children: [
-                const Padding(
+                Padding(
                   padding: EdgeInsets.all(10),
                   child: Row(
                     children: [
@@ -50,6 +64,14 @@ class UserProfile extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
+                      Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onTap: logout,
+                            child: Icon(Icons.logout, color: Colors.white,)
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -121,20 +143,36 @@ class UserProfile extends StatelessWidget {
                   ),
                 ],
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  ProfileSettings(),
-                  ProfilePage(),
-                  Spacer(),
-                  LogoutButton(),
-                ],
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      // ProfileSettings(),
+                      // ProfilePage(),
+                      // Spacer(),
+                      // LogoutButton(),
+
+                      SectionTitle(title: 'About PhysioDigital'),
+                      SectionContent(content:  'NuStep Recumbent Cross Trainer T4R combines a natural sitting position with a smooth stepping motion to work all major muscle groups during exercise.',),
+
+                      SectionTitle(title: 'About Physiotherapy'),
+                      SectionContent(content:  'NuStep Recumbent Cross Trainer T4R combines a natural sitting position with a smooth stepping motion to work all major muscle groups during exercise.',),
+
+                      SectionTitle(title: 'History'),
+                      SectionContent(content:  'NuStep Recumbent Cross Trainer T4R combines a natural sitting position with a smooth stepping motion to work all major muscle groups during exercise.',),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
         ],
       ),
+
+
       bottomNavigationBar: Obx(
         () => CustomBottomNavigationBar(
           currentIndex: homeController.currentIndex.value,

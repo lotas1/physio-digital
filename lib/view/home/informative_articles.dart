@@ -27,25 +27,25 @@ class InformativeArticles extends StatelessWidget {
             title,
             style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
           ),
-          TextButton.icon(
-            onPressed: () {
-              Get.to(const ListPostsPage());
-            },
-            label: const Text(
-              'See all',
-              style: TextStyle(color: Color.fromARGB(255, 99, 99, 99)),
-            ),
-            icon: const Icon(Icons.arrow_forward, size: 16),
-            iconAlignment: IconAlignment.end,
-            style: TextButton.styleFrom(
-              iconColor: const Color.fromARGB(255, 99, 99, 99), // Text color
-              backgroundColor: Colors.transparent, // Button color
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            ),
-          ),
+          // TextButton.icon(
+          //   onPressed: () {
+          //     Get.to(const ListPostsPage());
+          //   },
+          //   label: const Text(
+          //     'See all',
+          //     style: TextStyle(color: Color.fromARGB(255, 99, 99, 99)),
+          //   ),
+          //   icon: const Icon(Icons.arrow_forward, size: 16),
+          //   iconAlignment: IconAlignment.end,
+          //   style: TextButton.styleFrom(
+          //     iconColor: const Color.fromARGB(255, 99, 99, 99), // Text color
+          //     backgroundColor: Colors.transparent, // Button color
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(20),
+          //     ),
+          //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -75,7 +75,7 @@ class InformativeArticles extends StatelessWidget {
   Widget _buildArticleCard(String title, String imagePath, VoidCallback onTap) {
     return GestureDetector(
       onTap: () {
-        Get.to(const ViewArticlePage());
+        //Get.to(const ViewArticlePage());
       },
       child: Container(
         width: 200,

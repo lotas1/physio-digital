@@ -14,7 +14,6 @@ class AuthService {
         email: email,
         password: password,
       );
-      print('User signed in');
       _navigateToHome();
       return userCredential;
     } on FirebaseAuthException catch (e) {
@@ -33,7 +32,6 @@ class AuthService {
         email: email,
         password: password,
       );
-      print('User signed up');
       _navigateToHome();
       return userCredential;
     } on FirebaseAuthException catch (e) {
@@ -46,7 +44,6 @@ class AuthService {
     try {
       await _auth.signOut();
       _navigateToLogin();
-      print('User signed out');
     } catch (e) {
       throw Exception(e.toString());
     }

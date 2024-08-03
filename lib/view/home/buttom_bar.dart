@@ -21,7 +21,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
       () =>  Container(
       height: 75.0,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
+        color: Color(0xFF091531),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(15),
           topRight: Radius.circular(15),
@@ -31,6 +31,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         child: BottomNavigationBar(
          currentIndex: homeController.currentIndex.value,
           onTap: (index) {
+            homeController.currentIndex.value = index;
             onTap(index);
           },
           items: [
@@ -94,25 +95,18 @@ class CustomIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        if (isActive)
-          Container(
-            width: 40.0,
-            height: 40.0,
-            alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              color: Color.fromARGB(141, 74, 92, 181),
-              shape: BoxShape.circle,
-            ),
-          ),
-        Icon(
-          icon,
-          size: 20,
-          color: isActive ? Colors.white : Colors.grey,
-        ),
-      ],
+    return Container(
+      width: 40.0,
+      height: 40.0,
+      decoration: BoxDecoration(
+        color: isActive ? Color(0xFF1E3A8A) : Colors.transparent, // Slightly lighter navy for active state
+        shape: BoxShape.circle,
+      ),
+      child: Icon(
+        icon,
+        size: 20,
+        color: isActive ? Colors.white : Colors.grey,
+      ),
     );
   }
 }

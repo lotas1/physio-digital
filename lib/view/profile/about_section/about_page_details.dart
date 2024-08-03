@@ -35,7 +35,7 @@ class AboutPageDetailsState extends State<AboutPageDetails> {
           children: [
             const SizedBox(height: 20),
             SizedBox(
-              height: 25,
+              height: 45,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: categories.length,

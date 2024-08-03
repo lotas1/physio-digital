@@ -26,25 +26,25 @@ class UpcomingEvents extends StatelessWidget {
             title,
             style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
           ),
-          TextButton.icon(
-            onPressed: (){
-              // Get.to()
-            },
-            label: const Text(
-              'See all',
-              style: TextStyle(color: Color.fromARGB(255, 99, 99, 99)),
-            ),
-            icon: const Icon(Icons.arrow_forward, size: 16),
-            iconAlignment: IconAlignment.end,
-            style: TextButton.styleFrom(
-              iconColor: const Color.fromARGB(255, 99, 99, 99), // Text color
-              backgroundColor: Colors.transparent, // Button color
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            ),
-          ),
+          // TextButton.icon(
+          //   onPressed: (){
+          //     // Get.to()
+          //   },
+          //   label: const Text(
+          //     'See all',
+          //     style: TextStyle(color: Color.fromARGB(255, 99, 99, 99)),
+          //   ),
+          //   icon: const Icon(Icons.arrow_forward, size: 16),
+          //   iconAlignment: IconAlignment.end,
+          //   style: TextButton.styleFrom(
+          //     iconColor: const Color.fromARGB(255, 99, 99, 99), // Text color
+          //     backgroundColor: Colors.transparent, // Button color
+          //     shape: RoundedRectangleBorder(
+          //       borderRadius: BorderRadius.circular(20),
+          //     ),
+          //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -74,7 +74,7 @@ class UpcomingEvents extends StatelessWidget {
   Widget _buildEventCard(String title, String date, Color backgroundColor) {
     return GestureDetector(
       onTap: () {
-        Get.to(const ViewArticlePage());
+        //Get.to(const ViewArticlePage(post: post,));
       },
       child: Container(
         width: 200,

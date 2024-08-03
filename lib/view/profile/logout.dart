@@ -20,7 +20,7 @@ class LogoutButton extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: TextButton.icon(
         onPressed: logout,
-        icon: const Icon(Icons.logout, color: Colors.red),
+        icon: GestureDetector(child: const Icon(Icons.logout, color: Colors.red)),
         label: const Text(
           'Log out',
           style: TextStyle(color: Colors.red),

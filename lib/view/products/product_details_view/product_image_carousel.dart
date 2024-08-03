@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:physio_digital/models/products/product_model.dart';
+import 'package:physio_digital/model/product/product.dart';
 
 class ProductImageCarousel extends StatelessWidget {
   final Product product;
@@ -31,7 +31,7 @@ class ProductImageCarousel extends StatelessWidget {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15), // Add border radius here
             child: Image.asset(
-              product.imageUrl,
+              product.images[0],
               height: 200,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -41,7 +41,7 @@ class ProductImageCarousel extends StatelessWidget {
         const SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: product.imageThumbnails.asMap().entries.map((entry) {
+          children: product.images.asMap().entries.map((entry) {
             int idx = entry.key;
             String thumbnail = entry.value;
             return Padding(
@@ -81,14 +81,14 @@ class FullScreenImageCarousel extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageView.builder(
       controller: PageController(initialPage: initialIndex),
-      itemCount: product.imageThumbnails.length,
+      itemCount: product.images.length,
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () => Navigator.pop(context),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10), // Add border radius here
             child: Image.asset(
-              product.imageThumbnails[index],
+              product.images[index],
               fit: BoxFit.contain,
             ),
           ),

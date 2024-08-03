@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:physio_digital/controllers/home_controller.dart';
-import 'package:physio_digital/view/clinics/clinic_view.dart';
-import 'package:physio_digital/view/clinics/therapist_view.dart';
 import 'package:physio_digital/view/home/buttom_bar.dart';
+
+import '../therapists/listTherapist/list_therapist_view.dart';
+import 'clinic_view.dart';
 
 class Clinic extends StatefulWidget {
   const Clinic({Key? key}) : super(key: key);
@@ -30,8 +31,8 @@ class ClinicState extends State<Clinic> {
         child: Column(
           children: [
             Padding(
-               padding: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 15.0),
+              padding: const EdgeInsets.symmetric(
+                  vertical: 10.0, horizontal: 15.0),
               child: Row(
                 children: [
                   const Icon(Icons.article),
@@ -58,8 +59,8 @@ class ClinicState extends State<Clinic> {
             ),
             // const SizedBox(height: 10),
             Padding(
-               padding: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 10.0),
+              padding: const EdgeInsets.symmetric(
+                  vertical: 10.0, horizontal: 10.0),
               child: SizedBox(
                 height: 30,
                 child: ListView.builder(
@@ -88,12 +89,12 @@ class ClinicState extends State<Clinic> {
               ),
             ),
             const SizedBox(height: 10),
-              Expanded(child: _buildCategoryView()),
+            Expanded(child: _buildCategoryView()),
           ],
         ),
       ),
       bottomNavigationBar: Obx(
-        () => CustomBottomNavigationBar(
+            () => CustomBottomNavigationBar(
           currentIndex: homeController.currentIndex.value,
           onTap: (index) {
             homeController.changeIndex(index);
