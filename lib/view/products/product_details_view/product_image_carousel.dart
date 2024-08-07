@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:physio_digital/model/product/product.dart';
 
 class ProductImageCarousel extends StatelessWidget {
@@ -6,66 +7,90 @@ class ProductImageCarousel extends StatelessWidget {
 
   const ProductImageCarousel({super.key, required this.product});
 
-  void _showFullScreenCarousel(BuildContext context, int initialIndex) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.black,
-          insetPadding: const EdgeInsets.all(0),
-          child: FullScreenImageCarousel(
-            product: product,
-            initialIndex: initialIndex,
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        GestureDetector(
-          onTap: () => _showFullScreenCarousel(context, 0),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(15), // Add border radius here
-            child: Image.asset(
-              product.images[0],
-              height: 200,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-        ),
+        _buildMainImage(context),
         const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: product.images.asMap().entries.map((entry) {
-            int idx = entry.key;
-            String thumbnail = entry.value;
-            return Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: GestureDetector(
-                onTap: () => _showFullScreenCarousel(context, idx),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5), // Add border radius here
-                  child: Image.asset(
-                    thumbnail,
-                    height: 60,
-                    width: 60,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
+        if (product.images.isNotEmpty) _buildThumbnails(context),
       ],
     );
   }
-}
 
+  Widget _buildMainImage(BuildContext context) {
+    return GestureDetector(
+      onTap: product.images.isNotEmpty
+          ? () => _showFullScreenCarousel(context, 0)
+          : null,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: product.images.isNotEmpty
+            ? CachedNetworkImage(
+          imageUrl: product.images[0],
+          height: 200,
+          width: double.infinity,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => _buildPlaceholder(),
+          errorWidget: (context, url, error) => _buildPlaceholder(),
+        )
+            : _buildPlaceholder(),
+      ),
+    );
+  }
+
+  Widget _buildThumbnails(BuildContext context) {
+    return SizedBox(
+      height: 60,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: product.images.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: GestureDetector(
+              onTap: () => _showFullScreenCarousel(context, index),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: CachedNetworkImage(
+                  imageUrl: product.images[index],
+                  height: 60,
+                  width: 60,
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => _buildPlaceholder(size: 60),
+                  errorWidget: (context, url, error) => _buildPlaceholder(size: 60),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildPlaceholder({double size = 200}) {
+    return Container(
+      width: size,
+      height: size,
+      color: Colors.grey[300],
+      child: Icon(Icons.image, color: Colors.white, size: size * 0.5),
+    );
+  }
+
+  void _showFullScreenCarousel(BuildContext context, int initialIndex) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.black,
+        insetPadding: EdgeInsets.zero,
+        child: FullScreenImageCarousel(
+          product: product,
+          initialIndex: initialIndex,
+        ),
+      ),
+    );
+  }
+}
 
 class FullScreenImageCarousel extends StatelessWidget {
   final Product product;
@@ -85,15 +110,21 @@ class FullScreenImageCarousel extends StatelessWidget {
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () => Navigator.pop(context),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10), // Add border radius here
-            child: Image.asset(
-              product.images[index],
-              fit: BoxFit.contain,
-            ),
+          child: CachedNetworkImage(
+            imageUrl: product.images[index],
+            fit: BoxFit.contain,
+            placeholder: (context, url) => _buildPlaceholder(),
+            errorWidget: (context, url, error) => _buildPlaceholder(),
           ),
         );
       },
+    );
+  }
+
+  Widget _buildPlaceholder() {
+    return Container(
+      color: Colors.grey[300],
+      child: const Icon(Icons.image, color: Colors.white, size: 100),
     );
   }
 }

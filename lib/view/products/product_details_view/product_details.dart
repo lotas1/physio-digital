@@ -1,14 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:physio_digital/model/product/product.dart';
 import 'package:physio_digital/view/products/product_details_view/product_image_carousel.dart';
-import 'package:physio_digital/view/products/product_details_view/product_info.dart';
-
+import '../../../exports.dart';
 import 'buy_buttion.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final Product product;
+  final ListProductController controller = Get.find<ListProductController>();
 
-  const ProductDetailPage({Key? key, required this.product}) : super(key: key);
+  ProductDetailPage({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +17,12 @@ class ProductDetailPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
         ),
+
       ),
-      body: SafeArea(
+      body: Obx(() =>
+      controller.isLoading.value
+          ? const Center(child: CircularProgressIndicator())
+          : SafeArea(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -40,6 +42,7 @@ class ProductDetailPage extends StatelessWidget {
             ),
           ),
         ),
+      )
       ),
     );
   }
@@ -56,8 +59,8 @@ class ProductDetailPage extends StatelessWidget {
 
   Widget _buildProductPrice() {
     return Text(
-      product.price != null && product.price!.isNotEmpty
-          ? '\₦${product.price}'
+      product.price.isNotEmpty
+          ? '₦${product.price}'
           : 'Price not available',
       style: const TextStyle(
         color: Color(0xFF354AD9),

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:get/get.dart';
 import 'package:physio_digital/model/clinic/clinic.dart';
 import 'package:physio_digital/repository/clinic_repository.dart';

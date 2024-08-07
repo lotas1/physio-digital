@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:physio_digital/model/product/product.dart';
-import 'package:physio_digital/view/components/my_button.dart';
-import 'package:url_launcher/url_launcher.dart';
+
+
+import '../../../exports.dart';
 
 class BuyNowButton extends StatelessWidget {
   final Product product;
@@ -9,12 +8,18 @@ class BuyNowButton extends StatelessWidget {
   const BuyNowButton({Key? key, required this.product}) : super(key: key);
 
   Future<void> _launchWhatsApp(BuildContext context) async {
-    final String whatsappUrl = "https://wa.me/+2349032543740/?text=" +
+    String imageInfo = 'No image available';
+    if (product.images?.isNotEmpty == true) {
+      imageInfo = 'Image available at: ${product.images!.first}';
+    }
+
+    final String whatsappUrl = "https://wa.me/+2348115789924/?text=" +
         Uri.encodeComponent(
-          "Product: ${product.name}\n"
-              "Price: ₦${product.price}\n"
-              "Details: ${product.details}\n"
-              "Image: ${product.images.isNotEmpty ? product.images.first : 'No image available'}",
+          "Product: ${product.name}\n\n"
+              "Price: ₦${product.price}\n\n"
+              "Details: ${product.details}\n\n"
+              "Image: $imageInfo\n\n\n"
+              "The above link is the image of the product.",
         );
 
     final Uri uri = Uri.parse(whatsappUrl);
