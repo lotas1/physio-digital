@@ -15,12 +15,12 @@ android {
     compileSdkVersion 34
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = JavaVersion.VERSION_17
     }
 
     signingConfigs {
@@ -33,61 +33,30 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        // applicationId = "com.example.physio_digital"
-        // // You can update the following values to match your application needs.
-        // // For more information, see: https://flutter.dev/to/review-gradle-config.
-        // minSdk = flutter.minSdkVersion
-        // targetSdk = flutter.targetSdkVersion
-        // versionCode = flutter.versionCode
-        // versionName = flutter.versionName
-
         applicationId "com.physio_digital.app"
-        minSdkVersion 23  
-        targetSdkVersion 34
-        // versionCode flutterVersionCode.toInteger()
-        // versionName flutterVersionName
-
+        minSdk = 23  // Update this line to use SDK 23
+        targetSdk = flutter.targetSdkVersion
         versionCode 1  // Set this to a number, usually incremented with each release
         versionName "1.0.0"  // Set this to your version name
-
     }
 
-    splits {
-        abi {
-            enable true
-            reset()
-            include 'armeabi-v7a', 'arm64-v8a'
-            universalApk false
-        }
-    }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.release
+            signingConfig signingConfigs.release
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            zipAlignEnabled true
-            crunchPngs true
-        }
-    }
-
-     bundle {
-        language {
-            enableSplit = true
-        }
-        density {
-            enableSplit = true
-        }
-        abi {
-            enableSplit = true
         }
     }
 }
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.google.android.play:feature-delivery:2.1.0'
+    implementation 'com.google.android.play:app-update:2.1.0'
 }
