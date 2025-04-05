@@ -1,4 +1,4 @@
-package com.example.physio_digital
+package com.physio_digital.app
 
 import io.flutter.embedding.android.FlutterActivity
 
