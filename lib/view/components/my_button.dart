@@ -6,6 +6,10 @@ class MyButton extends StatefulWidget {
   final VoidCallback onTap;
   final IconData? icon;
   final bool isLoading;
+  final Color? backgroundColor;
+  final Color? textColor;
+  final EdgeInsetsGeometry? margin;
+  final double? height;
 
   const MyButton({
     Key? key,
@@ -13,10 +17,14 @@ class MyButton extends StatefulWidget {
     required this.onTap,
     this.icon,
     this.isLoading = false,
+    this.backgroundColor,
+    this.textColor,
+    this.margin,
+    this.height,
   }) : super(key: key);
 
   @override
-  _MyButtonState createState() => _MyButtonState();
+  State<MyButton> createState() => _MyButtonState();
 }
 
 class _MyButtonState extends State<MyButton> with SingleTickerProviderStateMixin {
@@ -30,7 +38,9 @@ class _MyButtonState extends State<MyButton> with SingleTickerProviderStateMixin
       vsync: this,
       duration: const Duration(milliseconds: 200),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(_controller);
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
   }
 
   @override
@@ -40,7 +50,9 @@ class _MyButtonState extends State<MyButton> with SingleTickerProviderStateMixin
   }
 
   void _handleTapDown(TapDownDetails details) {
-    _controller.forward();
+    if (!widget.isLoading) {
+      _controller.forward();
+    }
   }
 
   void _handleTapUp(TapUpDetails details) {
@@ -53,6 +65,10 @@ class _MyButtonState extends State<MyButton> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final backgroundColor = widget.backgroundColor ?? theme.colorScheme.primary;
+    final textColor = widget.textColor ?? theme.colorScheme.onPrimary;
+
     return GestureDetector(
       onTapDown: _handleTapDown,
       onTapUp: _handleTapUp,
@@ -61,11 +77,19 @@ class _MyButtonState extends State<MyButton> with SingleTickerProviderStateMixin
       child: ScaleTransition(
         scale: _scaleAnimation,
         child: Container(
-          padding: const EdgeInsets.all(8),
-          margin: const EdgeInsets.symmetric(horizontal: 25),
+          padding: const EdgeInsets.all(12),
+          margin: widget.margin ?? const EdgeInsets.symmetric(horizontal: 25),
+          height: widget.height ?? 52,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
+            color: widget.isLoading ? backgroundColor.withOpacity(0.8) : backgroundColor,
             borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: backgroundColor.withOpacity(0.3),
+                blurRadius: 5,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
           child: Center(
             child: widget.isLoading
@@ -73,24 +97,26 @@ class _MyButtonState extends State<MyButton> with SingleTickerProviderStateMixin
               width: 24,
               height: 24,
               child: CircularProgressIndicator(
-                color: Theme.of(context).colorScheme.onPrimary,
+                color: textColor,
                 strokeWidth: 3,
               ),
             )
                 : Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 if (widget.icon != null) ...[
                   FaIcon(
                     widget.icon,
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: textColor,
+                    size: 18,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 12),
                 ],
                 Text(
                   widget.text,
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onPrimary,
+                    color: textColor,
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
