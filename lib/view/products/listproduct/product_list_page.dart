@@ -4,7 +4,8 @@ import 'package:physio_digital/model/product/product.dart';
 import 'package:physio_digital/view/home/buttom_bar.dart';
 import 'package:physio_digital/view/products/listproduct/list_product_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-
+import 'package:google_fonts/google_fonts.dart';
+import 'package:shimmer/shimmer.dart'; // Import shimmer package
 import '../product_details_view/product_details.dart';
 
 class ListProducts extends GetView<ListProductController> {
@@ -13,12 +14,20 @@ class ListProducts extends GetView<ListProductController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
-            _buildHeader(),
-            _buildProductsTitle(),
-            Expanded(child: _buildProductGrid()),
+            _buildHeader(context),
+            Expanded(
+              child: RefreshIndicator(
+                color: const Color(0xFF354AD9),
+                onRefresh: () async {
+                  await controller.fetchProducts();
+                },
+                child: _buildProductList(),
+              ),
+            ),
           ],
         ),
       ),
@@ -26,155 +35,340 @@ class ListProducts extends GetView<ListProductController> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
     return Obx(() {
       final bool isExpanded = controller.isSearchExpanded.value;
 
-      return LayoutBuilder(
-        builder: (context, constraints) {
-          final double maxWidth = constraints.maxWidth;
-          final double collapsedWidth = 48; // Width of the search icon button
-
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(26, 53, 75, 217),
-              borderRadius: BorderRadius.circular(8),
+      return Container(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              offset: const Offset(0, 2),
+              blurRadius: 6,
             ),
-            child: Row(
+          ],
+        ),
+        child: Column(
+          children: [
+            Row(
               children: [
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  width: isExpanded ? 0 : maxWidth - collapsedWidth - 30, // 30 for padding
-                  child: AnimatedOpacity(
-                    opacity: isExpanded ? 0.0 : 1.0,
-                    duration: const Duration(milliseconds: 200),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.storefront),
-                        const SizedBox(width: 5),
-                        Expanded(
-                          child: Text(
-                            'Market',
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                            overflow: TextOverflow.ellipsis,
+                if (!isExpanded) ...[
+                  Text(
+                    'Shop',
+                    style: GoogleFonts.poppins(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF354AD9),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Products',
+                    style: GoogleFonts.poppins(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w400,
+                      color: const Color(0xFF333333),
+                    ),
+                  ),
+                  const Spacer(),
+                ],
+                if (isExpanded)
+                  Expanded(
+                    child: Container(
+                      height: 44,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: TextField(
+                        autofocus: true,
+                        decoration: InputDecoration(
+                          hintText: 'Search products...',
+                          hintStyle: GoogleFonts.poppins(
+                            color: Colors.grey[500],
+                            fontSize: 14,
+                          ),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                          suffixIcon: IconButton(
+                            icon: const Icon(
+                              Icons.close,
+                              color: Colors.grey,
+                              size: 20,
+                            ),
+                            onPressed: () {
+                              controller.toggleSearch();
+                              controller.resetSearch();
+                            },
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  width: isExpanded ? maxWidth - 30 : collapsedWidth,
-                  child: isExpanded
-                      ? TextField(
-                    autofocus: true,
-                    decoration: InputDecoration(
-                      hintText: 'Search products...',
-                      hintStyle: TextStyle(color: Colors.grey[600]),
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 0),
-                      prefixIcon: Icon(Icons.search, color: Colors.grey[600], size: 20),
-                      prefixIconConstraints: BoxConstraints(minWidth: 40, maxWidth: 40),
-                      suffixIcon: IconButton(
-                        icon: Icon(Icons.close, color: Colors.grey[600], size: 20),
-                        onPressed: () {
-                          controller.toggleSearch();
-                          controller.resetSearch();
-                        },
-                        constraints: BoxConstraints(minWidth: 40, maxWidth: 40),
+                        onChanged: controller.searchProducts,
                       ),
                     ),
-                    onChanged: controller.searchProducts,
-                    style: TextStyle(fontSize: 16),
                   )
-                      : IconButton(
-                    icon: const Icon(Icons.search),
+                else
+                  IconButton(
+                    icon: const Icon(
+                      Icons.search_rounded,
+                      color: Color(0xFF354AD9),
+                      size: 28,
+                    ),
                     onPressed: controller.toggleSearch,
                   ),
-                ),
               ],
             ),
-          );
-        },
+            // if (!isExpanded)
+            //   const SizedBox(height: 12),
+            // if (!isExpanded)
+            //   _buildCategoryTabs(),
+          ],
+        ),
       );
     });
   }
 
-  Widget _buildProductsTitle() {
+
+
+  Widget _buildProductList() {
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return _buildShimmerLoading();
+      } else if (controller.filteredProducts.isEmpty) {
+        return _buildEmptyState();
+      } else {
+        return _buildProductGrid();
+      }
+    });
+  }
+
+  // Shimmer loading effect
+  Widget _buildShimmerLoading() {
     return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          'Products',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: GridView.builder(
+        padding: const EdgeInsets.only(top: 16, bottom: 16),
+        physics: const BouncingScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.72,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+        ),
+        itemCount: 6, // Show 6 shimmer placeholders
+        itemBuilder: (context, index) {
+          return _buildShimmerProductCard();
+        },
+      ),
+    );
+  }
+
+  Widget _buildShimmerProductCard() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 5,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    // Calculate the remaining space we have
+                    final availableHeight = constraints.maxHeight;
+                    // Distribute the space proportionally
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          height: availableHeight * 0.3,
+                          color: Colors.white,
+                        ),
+                        SizedBox(height: availableHeight * 0.1),
+                        Container(
+                          width: 100,
+                          height: availableHeight * 0.15,
+                          color: Colors.white,
+                        ),
+                        Spacer(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: 80,
+                              height: availableHeight * 0.2,
+                              color: Colors.white,
+                            ),
+                            Container(
+                              width: 28,
+                              height: 28,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildProductGrid() {
-    return Obx(() {
-      if (controller.isLoading.value) {
-        return Center(child: CircularProgressIndicator());
-      } else if (controller.filteredProducts.isEmpty) {
-        return Center(child: Text('No products found'));
-      } else {
-        return GridView.builder(
-          padding: const EdgeInsets.all(8.0),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 0.8,
-            crossAxisSpacing: 8.0,
-            mainAxisSpacing: 8.0,
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.shopping_bag_outlined,
+            size: 64,
+            color: Colors.grey[400],
           ),
-          itemCount: controller.filteredProducts.length,
-          itemBuilder: (context, index) {
-            final product = controller.filteredProducts[index];
-            return _buildProductCard(product, context);
-          },
-        );
-      }
-    });
+          const SizedBox(height: 16),
+          Text(
+            'No products found',
+            style: GoogleFonts.poppins(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey[700],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Try a different search term',
+            style: GoogleFonts.poppins(
+              fontSize: 14,
+              color: Colors.grey[600],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProductGrid() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: GridView.builder(
+        padding: const EdgeInsets.only(top: 16, bottom: 16),
+        physics: const BouncingScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.72,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+        ),
+        itemCount: controller.filteredProducts.length,
+        itemBuilder: (context, index) {
+          final product = controller.filteredProducts[index];
+          return _buildProductCard(product, context);
+        },
+      ),
+    );
   }
 
   Widget _buildProductCard(Product product, BuildContext context) {
     return GestureDetector(
       onTap: () => _navigateToProductDetail(product, context),
-      child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey[200]!),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildProductImage(product),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product.name ?? 'Unknown',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                      color: Colors.black,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '₦${product.price ?? 'N/A'}',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                ],
+            Expanded(
+              flex: 5,
+              child: _buildProductImage(product),
+            ),
+            Expanded(
+              flex: 3,
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(
+                          height: constraints.maxHeight * 0.55,
+                          child: Text(
+                            product.name ?? 'Unnamed Product',
+                            style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 13,
+                              color: Colors.black87,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const Spacer(), // Push everything to the top and bottom
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'NGN ${product.price}',
+                                style: GoogleFonts.poppins(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 14,
+                                  color: const Color(0xFF354AD9),
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            Container(
+                              width: 28,
+                              height: 28,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEEF0FF),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Icon(
+                                Icons.add,
+                                color: Color(0xFF354AD9),
+                                size: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           ],
@@ -184,30 +378,40 @@ class ListProducts extends GetView<ListProductController> {
   }
 
   Widget _buildProductImage(Product product) {
-    return Stack(
-      children: [
-        ClipRRect(
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-          child: product.images.isNotEmpty
-              ? CachedNetworkImage(
-            imageUrl: product.images.first,
-            width: double.infinity,
-            height: 130,
-            fit: BoxFit.cover,
-            // placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-            errorWidget: (context, url, error) => _buildDefaultImage(),
-          ) : _buildDefaultImage(),
-        ),
-      ],
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+      child: product.images.isNotEmpty
+          ? CachedNetworkImage(
+        imageUrl: product.images.first,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        placeholder: (context, url) => _buildImageShimmer(),
+        errorWidget: (context, url, error) => _buildDefaultImage(),
+      )
+          : _buildDefaultImage(),
+    );
+  }
+
+  Widget _buildImageShimmer() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        color: Colors.white,
+      ),
     );
   }
 
   Widget _buildDefaultImage() {
-    return Image.asset(
-      'assets/images/default_image.jpg',
-      width: double.infinity,
-      height: 130,
-      fit: BoxFit.cover,
+    return Container(
+      color: const Color(0xFFF5F6FA),
+      child: Center(
+        child: Icon(
+          Icons.image_outlined,
+          size: 36,
+          color: Colors.grey[400],
+        ),
+      ),
     );
   }
 
@@ -220,17 +424,15 @@ class ListProducts extends GetView<ListProductController> {
     );
   }
 
-
   Widget _buildBottomNavigationBar() {
     return CustomBottomNavigationBar(
-      currentIndex: 1, // Assuming this is the marketplace page
+      currentIndex: 1,
       onTap: (index) {
         switch (index) {
           case 0:
             Get.toNamed('/');
             break;
           case 1:
-          // We're already on the marketplace page
             break;
           case 2:
             Get.toNamed('/clinic');

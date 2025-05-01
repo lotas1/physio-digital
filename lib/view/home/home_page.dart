@@ -4,8 +4,7 @@ import 'package:physio_digital/view/home/buttom_bar.dart';
 import 'package:physio_digital/view/home/clinic_near_you.dart';
 import 'package:physio_digital/view/home/informative_articles.dart';
 import 'package:physio_digital/view/home/upcoming_events.dart';
-import 'package:physio_digital/view/notification/list_notifications.dart';
-// import 'package:physio_consult/controllers/home_controller.dart';
+// import 'package:physio_digital/view/notification/list_notifications.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -43,162 +42,127 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    try {
-      return Scaffold(
-        
-        backgroundColor: const Color(0xFFF5F5F5),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(35),
-                    bottomRight: Radius.circular(35),
-                  ),
+    return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F5),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Header
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(35),
+                  bottomRight: Radius.circular(35),
                 ),
-                child: Padding(
-                  padding: const EdgeInsets.all(13.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Profile and optional notification
+                  Row(
                     children: [
-                      SizedBox(height: 20,),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                      CircleAvatar(
+                        radius: 26,
+                        backgroundColor: Colors.white,
+                        child: CircleAvatar(
+                          radius: 24,
+                          backgroundImage:
+                          const AssetImage('assets/images/onboard.jpg'),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      const Expanded(
+                        child: Text(
+                          'Welcome back',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      // Notification bell (commented out as requested)
+                      /*
+                      Stack(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color:
-                                      const Color.fromARGB(255, 218, 218, 218),
-                                  width: 4.0,
-                                ),
-                              ),
-                              child: const CircleAvatar(
-                                backgroundImage:
-                                    AssetImage('assets/images/onboard.jpg'),
-                              ),
+                          IconButton(
+                            onPressed: () {
+                              Get.to(const ListNotifications());
+                            },
+                            icon: const Icon(
+                              Icons.notifications,
+                              color: Colors.white,
                             ),
                           ),
-                          const Spacer(),
-                          const Spacer(),
-                          const Spacer(),
-                          const Spacer(),
-                          const Spacer(),
-                          const Spacer(),
-                          Expanded(
-                            child: Stack(
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    Get.to(const ListNotifications());
-                                  },
-                                  icon: const Icon(
-                                    Icons.notifications,
-                                    color: Colors.white,
-                                  ),
+                          Positioned(
+                            right: 6,
+                            top: 6,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Text(
+                                '5',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                Positioned(
-                                  right: 0,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(1),
-                                    decoration: BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(6),
-                                    ),
-                                    constraints: const BoxConstraints(
-                                      minWidth: 12,
-                                      minHeight: 12,
-                                    ),
-                                    child: const Text(
-                                      '5',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 8,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      // const Row(
-                      //   children: [
-                      //     Text.rich(
-                      //       TextSpan(
-                      //           text: "Good day, ",
-                      //           style: TextStyle(
-                      //               fontSize: 18,
-                      //               color: Color.fromARGB(255, 184, 184, 184)),
-                      //           children: [
-                      //             TextSpan(
-                      //               text: 'Christian 👋',
-                      //               style: TextStyle(
-                      //                   fontWeight: FontWeight.bold,
-                      //                   color: Colors.white),
-                      //             )
-                      //           ]),
-                      //     )
-                      //   ],
-                      // ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      TextField(
-                        decoration: InputDecoration(
-                          hintText: 'Search for therapist, products',
-                          prefixIcon: const Icon(Icons.search),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
-                        ),
-                        cursorColor: const Color.fromARGB(255, 128, 128, 128),
-                      ),
-                      const SizedBox(height: 20),
+                      */
                     ],
                   ),
-                ),
+                  const SizedBox(height: 20),
+                  // Search Bar
+                  TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Search for therapist, products...',
+                      prefixIcon: const Icon(Icons.search),
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 0),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: BorderSide.none,
+                      ),
+                    ),
+                    cursorColor: Colors.grey,
+                  ),
+                ],
               ),
-              Container(
-                color: Colors.white,
-                padding: const EdgeInsets.all(13.0),
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClinicNearYou(),
-                    UpcomingEvents(),
-                    InformativeArticles(),
-                  ],
-                ),
+            ),
+
+            // Main content
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              child: const Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClinicNearYou(),        // Keep original placement
+                  SizedBox(height: 20),
+                  UpcomingEvents(),      // Keep original placement
+                  SizedBox(height: 20),
+                  InformativeArticles(), // Keep original placement
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        bottomNavigationBar: CustomBottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: _onTap,
-        ),
-      );
-    } catch (e) {
-      return const Scaffold(
-        body: Center(
-          child: Text('An error occurred'),
-        ),
-      );
-    }
+      ),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: _onTap,
+      ),
+    );
   }
 }
-

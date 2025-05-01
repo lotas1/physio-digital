@@ -9,7 +9,6 @@ export 'package:physio_digital/bindings/registration_binding.dart';
 export 'package:physio_digital/controllers/home_controller.dart';
 export 'package:physio_digital/themes/light_mode.dart';
 export 'package:physio_digital/view/clinics/clinic.dart';
-export 'package:physio_digital/view/home/home_page.dart';
 export 'package:physio_digital/view/posts/list_posts.dart';
 export 'package:physio_digital/view/products/listproduct/product_list_page.dart';
 export 'package:physio_digital/view/profile/user_profile.dart';
