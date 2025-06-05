@@ -74,7 +74,7 @@ class ListPostsPageState extends State<ListPostsPage> {
             _buildHeader(),
             _buildCategoryList(),
             _buildRecentHeader(),
-            // FIX 2: Wrap in Expanded to solve overflow issue
+            // Posts list
             _buildPostsList(),
           ],
         ),

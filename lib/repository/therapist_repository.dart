@@ -57,20 +57,6 @@ class TherapistRepositoryImpl implements TherapistRepository {
     }
   }
 
-  @override
-  Future<void> removeTheapist(String therapistId) async {
-    try {
-      await _firestore.collection('therapists').doc(therapistId).delete();
-    } on FirebaseException catch (e) {
-      if (e.code == 'unavailable') {
-        throw Exception('Network issue: Failed to remove therapist. Please check your internet connection and try again.');
-      } else {
-        throw Exception('Failed to remove therapist: ${e.message}');
-      }
-    } catch (e) {
-      throw Exception('An unexpected error occurred: ${e.toString()}');
-    }
-  }
 
   @override
   Future<List<Therapist>> getAllTherapist() async {
