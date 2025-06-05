@@ -1,6 +1,10 @@
 # physio_digital
 
-A new Flutter project.
+A Flutter application for physiotherapy services.
+
+## Important Notice
+
+As of the latest update, this application no longer requires authentication to access its features. While the authentication UI and logic remain in the codebase, they are not enforced. Users can now freely access and read data without logging in.
 
 ## Getting Started
 
