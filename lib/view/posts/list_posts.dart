@@ -10,61 +10,71 @@ class ListPostsPage extends StatelessWidget {
       'title': 'Stretching can increase your tolerance for pain',
       'category': 'News',
       'date': 'Feb 22, 2024',
-      'description': 'Some people with back pain see immediate improvements after a specific stretch...'
+      'description': 'Some people with back pain see immediate improvements after a specific stretch...',
+      'imageUrl': 'assets/images/product3.jpg',
     },
     {
       'title': "Physio 'dry needling' and acupuncture",
       'category': 'News',
       'date': 'Feb 12, 2024',
-      'description': "Dry needling and Western acupuncture don't use the same theoretical approach as traditional Chinese medicine..."
+      'description': "Dry needling and Western acupuncture don't use the same theoretical approach as traditional Chinese medicine...",
+      'imageUrl': 'assets/images/product2.jpg',
     },
     {
       'title': 'Should I stop running if my knee hurts?',
       'category': 'News',
       'date': 'Feb 09, 2024',
-      'description': 'How to run safely with knee pain and when to seek professional help...'
+      'description': 'How to run safely with knee pain and when to seek professional help...',
+      'imageUrl': 'assets/images/prduct1.png',
     },
     {
       'title': 'A culture specific health measuring instrument for a...',
       'category': 'News',
       'date': 'Feb 04, 2024',
-      'description': 'Healthcare professionals should develop new measurement tools that are culturally appropriate...'
+      'description': 'Healthcare professionals should develop new measurement tools that are culturally appropriate...',
+      'imageUrl': 'assets/images/onboard.jpg',
     },
     {
       'title': 'Physiotherapy Open Day - Join Us!',
       'category': 'Events',
       'date': 'Feb 28, 2024',
-      'description': 'Learn about physiotherapy careers and meet practicing professionals...'
+      'description': 'Learn about physiotherapy careers and meet practicing professionals...',
+      'imageUrl': 'assets/images/logo.png',
     },
     {
       'title': 'Summer Internship Program Applications Open',
       'category': 'Internships',
       'date': 'Feb 26, 2024',
-      'description': 'Apply now for our comprehensive summer internship program in physiotherapy...'
+      'description': 'Apply now for our comprehensive summer internship program in physiotherapy...',
+      'imageUrl': 'assets/images/logo-2.png',
     },
     {
       'title': 'Senior Physiotherapist Position Available',
       'category': 'Jobs',
       'date': 'Feb 25, 2024',
-      'description': 'We are seeking an experienced physiotherapist to join our growing team...'
+      'description': 'We are seeking an experienced physiotherapist to join our growing team...',
+      'imageUrl': 'assets/images/circle_pattern.png',
     },
     {
       'title': 'Advanced Manual Therapy Webinar',
       'category': 'Webinars',
       'date': 'Feb 24, 2024',
-      'description': 'Join our expert panel for an in-depth discussion on advanced manual therapy techniques...'
+      'description': 'Join our expert panel for an in-depth discussion on advanced manual therapy techniques...',
+      'imageUrl': 'assets/images/product3.jpg',
     },
     {
       'title': 'Annual Physiotherapy Conference 2024',
       'category': 'Conference',
       'date': 'Feb 23, 2024',
-      'description': 'Register now for the biggest physiotherapy conference of the year...'
+      'description': 'Register now for the biggest physiotherapy conference of the year...',
+      'imageUrl': 'assets/images/product2.jpg',
     },
     {
       'title': 'Community Health Fair Coming This Weekend',
       'category': 'Events',
       'date': 'Feb 27, 2024',
-      'description': 'Free health screenings and consultations available at our annual health fair...'
+      'description': 'Free health screenings and consultations available at our annual health fair...',
+      'imageUrl': 'assets/images/prduct1.png',
     },
   ];
 
@@ -418,7 +428,7 @@ class _PostCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _PostCardHeader(category: post['category']),
+            _PostCardHeader(category: post['category'], post: post),
             _PostCardContent(post: post),
           ],
         ),
@@ -428,9 +438,10 @@ class _PostCard extends StatelessWidget {
 }
 
 class _PostCardHeader extends StatelessWidget {
-  const _PostCardHeader({required this.category});
+  const _PostCardHeader({required this.category, required this.post});
 
   final String? category;
+  final Map<String, dynamic> post;
 
   Color _getCategoryColor(String? category) {
     switch (category?.toLowerCase()) {
@@ -451,44 +462,85 @@ class _PostCardHeader extends StatelessWidget {
     }
   }
 
-  IconData _getCategoryIcon(String? category) {
-    switch (category?.toLowerCase()) {
-      case 'news':
-        return Icons.newspaper;
-      case 'internships':
-        return Icons.school;
-      case 'events':
-        return Icons.event;
-      case 'jobs':
-        return Icons.work;
-      case 'webinars':
-        return Icons.videocam;
-      case 'conference':
-        return Icons.groups;
-      default:
-        return Icons.article;
+  Widget _getImageWidget() {
+    String? imageUrl = post['imageUrl'];
+    
+    // Check if imageUrl is a local asset
+    if (imageUrl != null && imageUrl.startsWith('assets/')) {
+      return Image.asset(
+        imageUrl,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: 140,
+      );
     }
+    
+    // Check if imageUrl is a valid URL
+    if (imageUrl != null && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))) {
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: 140,
+        errorBuilder: (context, error, stackTrace) {
+          return _getDefaultContainer();
+        },
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            height: 140,
+            width: double.infinity,
+            color: Colors.grey[300],
+            child: const Center(child: CircularProgressIndicator()),
+          );
+        },
+      );
+    }
+    
+    // Default fallback
+    return _getDefaultContainer();
+  }
+
+  Widget _getDefaultContainer() {
+    final color = _getCategoryColor(category);
+    return Container(
+      height: 140,
+      width: double.infinity,
+      color: color.withValues(alpha: 0.2),
+      child: Center(
+        child: Icon(
+          Icons.article,
+          size: 64,
+          color: color.withValues(alpha: 0.5),
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final color = _getCategoryColor(category);
-    final icon = _getCategoryIcon(category);
 
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Container(
         height: 140,
         width: double.infinity,
-        color: color.withValues(alpha: 0.2),
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Center(
-              child: Icon(
-                icon,
-                size: 64,
-                color: color.withValues(alpha: 0.5),
+            _getImageWidget(),
+            // Dark overlay for better text readability
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    Colors.black.withValues(alpha: 0.3),
+                  ],
+                ),
               ),
             ),
             Positioned(

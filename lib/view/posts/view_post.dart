@@ -48,12 +48,81 @@ class ViewArticlePage extends StatelessWidget {
       onTap: () => _showFullScreenImage(context),
       child: Hero(
         tag: 'articleImage',
-        child: Image.network(
-          post['imageUrl'] ?? 'https://via.placeholder.com/400x200',
-          fit: BoxFit.cover,
-          height: 200,
-          width: double.infinity,
+        child: _getImageWidget(),
+      ),
+    );
+  }
+
+  Widget _getImageWidget() {
+    String? imageUrl = post['imageUrl'];
+    
+    // Check if imageUrl is a local asset
+    if (imageUrl != null && imageUrl.startsWith('assets/')) {
+      return Image.asset(
+        imageUrl,
+        fit: BoxFit.cover,
+        height: 200,
+        width: double.infinity,
+      );
+    }
+    
+    // Check if imageUrl is a valid URL
+    if (imageUrl != null && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))) {
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        height: 200,
+        width: double.infinity,
+        errorBuilder: (context, error, stackTrace) {
+          return _getDefaultImage();
+        },
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            height: 200,
+            width: double.infinity,
+            color: Colors.grey[300],
+            child: Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                    : null,
+              ),
+            ),
+          );
+        },
+      );
+    }
+    
+    // Default fallback
+    return _getDefaultImage();
+  }
+
+  Widget _getDefaultImage() {
+    return Container(
+      height: 200,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.blue[100]!, Colors.blue[300]!],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.article, size: 60, color: Colors.blue[700]),
+          const SizedBox(height: 8),
+          Text(
+            'Blog Article',
+            style: TextStyle(
+              color: Colors.blue[700],
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -170,17 +239,36 @@ Remember, while stretching can be a powerful tool for managing and increasing to
   }
 
   void _showFullScreenImage(BuildContext context) {
+    String? imageUrl = post['imageUrl'];
+    ImageProvider imageProvider;
+    
+    // Determine the appropriate image provider
+    if (imageUrl != null && imageUrl.startsWith('assets/')) {
+      imageProvider = AssetImage(imageUrl);
+    } else if (imageUrl != null && (imageUrl.startsWith('http://') || imageUrl.startsWith('https://'))) {
+      imageProvider = NetworkImage(imageUrl);
+    } else {
+      // Don't show full screen for default image
+      return;
+    }
+    
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => Scaffold(
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          iconTheme: const IconThemeData(color: Colors.white),
+        ),
         body: GestureDetector(
           onTap: () => Navigator.of(context).pop(),
           child: Center(
             child: Hero(
               tag: 'articleImage',
               child: PhotoView(
-                imageProvider: NetworkImage(post['imageUrl'] ?? 'https://via.placeholder.com/400x200'),
+                imageProvider: imageProvider,
                 minScale: PhotoViewComputedScale.contained,
                 maxScale: PhotoViewComputedScale.covered * 2,
+                backgroundDecoration: const BoxDecoration(color: Colors.black),
               ),
             ),
           ),
