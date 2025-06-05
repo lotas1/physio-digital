@@ -82,7 +82,7 @@ class ListPostsPageState extends State<ListPostsPage> {
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
+      bottomNavigationBar: CustomBottomNavigationBar.create(),
     );
   }
 
@@ -465,30 +465,5 @@ class ListPostsPageState extends State<ListPostsPage> {
     }
   }
 
-  Widget _buildBottomNavigationBar() {
-    // FIX 1: Fixed Obx implementation
-    return Obx(() => CustomBottomNavigationBar(
-      currentIndex: homeController.currentIndex.value,
-      onTap: (index) {
-        homeController.changeIndex(index);
-        switch (index) {
-          case 0:
-            Get.toNamed('/');
-            break;
-          case 1:
-            Get.toNamed('/marketplace');
-            break;
-          case 2:
-            Get.toNamed('/clinic');
-            break;
-          case 3:
-            Get.toNamed('/blog');
-            break;
-          case 4:
-            Get.toNamed('/profile');
-            break;
-        }
-      },
-    ));
-  }
+
 }

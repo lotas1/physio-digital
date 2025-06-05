@@ -31,7 +31,7 @@ class ListProducts extends GetView<ListProductController> {
           ],
         ),
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
+      bottomNavigationBar: CustomBottomNavigationBar.create(),
     );
   }
 
@@ -45,7 +45,7 @@ class ListProducts extends GetView<ListProductController> {
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               offset: const Offset(0, 2),
               blurRadius: 6,
             ),
@@ -424,27 +424,5 @@ class ListProducts extends GetView<ListProductController> {
     );
   }
 
-  Widget _buildBottomNavigationBar() {
-    return CustomBottomNavigationBar(
-      currentIndex: 1,
-      onTap: (index) {
-        switch (index) {
-          case 0:
-            Get.toNamed('/');
-            break;
-          case 1:
-            break;
-          case 2:
-            Get.toNamed('/clinic');
-            break;
-          case 3:
-            Get.toNamed('/blog');
-            break;
-          case 4:
-            Get.toNamed('/profile');
-            break;
-        }
-      },
-    );
-  }
+
 }

@@ -13,6 +13,42 @@ class CustomBottomNavigationBar extends StatelessWidget {
     required this.onTap,
   }) : super(key: key);
 
+  // Static method to create standardized bottom navigation bar
+  static Widget create() {
+    final HomeController homeController = Get.find<HomeController>();
+    
+    return Obx(
+      () => CustomBottomNavigationBar(
+        currentIndex: homeController.currentIndex.value,
+        onTap: (index) {
+          homeController.changeIndex(index);
+          _navigateToPage(index);
+        },
+      ),
+    );
+  }
+
+  // Centralized navigation logic
+  static void _navigateToPage(int index) {
+    switch (index) {
+      case 0:
+        Get.toNamed('/');
+        break;
+      case 1:
+        Get.toNamed('/marketplace');
+        break;
+      case 2:
+        Get.toNamed('/clinic');
+        break;
+      case 3:
+        Get.toNamed('/blog');
+        break;
+      case 4:
+        Get.toNamed('/profile');
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final HomeController homeController = Get.find<HomeController>();
@@ -34,7 +70,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           color: backgroundColor,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: Colors.black.withValues(alpha: 0.04),
               blurRadius: 8,
               offset: const Offset(0, -2),
             ),
@@ -75,7 +111,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         width: 45,
         height: 45,
         decoration: BoxDecoration(
-          color: isActive ? primaryBlue.withOpacity(0.1) : Colors.transparent,
+          color: isActive ? primaryBlue.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(14),
         ),
         child: Center(

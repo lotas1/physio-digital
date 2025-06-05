@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:physio_digital/controllers/home_controller.dart';
 import 'package:physio_digital/view/home/buttom_bar.dart';
 
 class UserProfile extends StatelessWidget {
@@ -8,7 +6,6 @@ class UserProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomeController homeController = Get.find();
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       body: CustomScrollView(
@@ -130,31 +127,7 @@ class UserProfile extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: Obx(
-        () => CustomBottomNavigationBar(
-          currentIndex: homeController.currentIndex.value,
-          onTap: (index) {
-            homeController.changeIndex(index);
-            switch (index) {
-              case 0:
-                Get.toNamed('/');
-                break;
-              case 1:
-                Get.toNamed('/marketplace');
-                break;
-              case 2:
-                Get.toNamed('/clinic');
-                break;
-              case 3:
-                Get.toNamed('/blog');
-                break;
-              case 4:
-                Get.toNamed('/profile');
-                break;
-            }
-          },
-        ),
-      ),
+      bottomNavigationBar: CustomBottomNavigationBar.create(),
     );
   }
 
