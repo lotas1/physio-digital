@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:physio_digital/controllers/home_controller.dart';
 import 'package:physio_digital/view/home/buttom_bar.dart';
+import 'package:physio_digital/bindings/clinic_binding.dart';
 import '../therapists/listTherapist/list_therapist_view.dart';
 import 'clinic_view.dart';
 
@@ -25,6 +26,9 @@ class ClinicState extends State<Clinic> with SingleTickerProviderStateMixin {
     _tabController.addListener(() {
       setState(() {});
     });
+
+    // Initialize clinic binding
+    ClinicBinding().dependencies();
 
     // Simulate loading data
     Future.delayed(const Duration(seconds: 2), () {

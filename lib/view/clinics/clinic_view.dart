@@ -1,44 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:physio_digital/view/clinics/clinic_profile/clinic_details.dart';
+import 'package:physio_digital/view/clinics/listclinic/list_clinic_controller.dart';
+import 'package:physio_digital/model/clinic/clinic.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 
-class ClinicsView extends StatefulWidget {
+class ClinicsView extends GetView<ListClinicController> {
   const ClinicsView({Key? key}) : super(key: key);
-
-  @override
-  State<ClinicsView> createState() => _ClinicsViewState();
-}
-
-class _ClinicsViewState extends State<ClinicsView> with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  bool _isLoading = true;
-  final List<int> _items = List.generate(6, (index) => index);
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    );
-    _animationController.forward();
-
-    // Simulate data loading
-    Future.delayed(const Duration(seconds: 2), () {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,11 +21,17 @@ class _ClinicsViewState extends State<ClinicsView> with SingleTickerProviderStat
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildSectionTitle('Clinics'),
-                const SizedBox(height: 12), // Reduced spacing
+                const SizedBox(height: 12),
                 Expanded(
-                  child: _isLoading
-                      ? _buildShimmerGrid()
-                      : _buildAnimatedGrid(),
+                  child: Obx(() {
+                    if (controller.isLoading.value) {
+                      return _buildShimmerGrid();
+                    } else if (controller.clinics.isEmpty) {
+                      return _buildEmptyState();
+                    } else {
+                      return _buildClinicGrid();
+                    }
+                  }),
                 ),
               ],
             ),
@@ -77,45 +52,55 @@ class _ClinicsViewState extends State<ClinicsView> with SingleTickerProviderStat
     );
   }
 
-  Widget _buildAnimatedGrid() {
-    return GridView.builder(
-      physics: const BouncingScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 1.0, // Adjusted for more compact cards
-        crossAxisSpacing: 12, // Reduced spacing
-        mainAxisSpacing: 12, // Reduced spacing
-      ),
-      itemCount: _items.length,
-      itemBuilder: (context, index) {
-        return AnimatedBuilder(
-          animation: _animationController,
-          builder: (context, child) {
-            final delay = (index * 0.2).clamp(0.0, 1.0);
-            final value = CurvedAnimation(
-              parent: _animationController,
-              curve: Interval(
-                delay,
-                1.0,
-                curve: Curves.easeOutQuart,
-              ),
-            ).value;
-
-            return Transform.translate(
-              offset: Offset(0, 50 * (1 - value)),
-              child: Opacity(
-                opacity: value,
-                child: child,
-              ),
-            );
-          },
-          child: _buildClinicCard(
-            'Dr. Felix Clinic',
-            imagePath: 'assets/images/onboard.jpg',
-            specialty: index % 2 == 0 ? 'Orthopedic' : 'Physiotherapy',
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.local_hospital_outlined,
+            size: 64,
+            color: Colors.grey[400],
           ),
-        );
-      },
+          const SizedBox(height: 16),
+          Text(
+            'No clinics found',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey[700],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Please try again later',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[600],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildClinicGrid() {
+    return RefreshIndicator(
+      onRefresh: () => controller.fetchClinics(),
+      child: GridView.builder(
+        physics: const BouncingScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.9,
+          crossAxisSpacing: 12,
+          mainAxisSpacing: 12,
+        ),
+        itemCount: controller.clinics.length,
+        itemBuilder: (context, index) {
+          final clinic = controller.clinics[index];
+          return _buildClinicCard(clinic, index);
+        },
+      ),
     );
   }
 
@@ -201,11 +186,11 @@ class _ClinicsViewState extends State<ClinicsView> with SingleTickerProviderStat
     );
   }
 
-  Widget _buildClinicCard(String name, {required String imagePath, required String specialty}) {
+  Widget _buildClinicCard(Clinic clinic, int index) {
     return GestureDetector(
       onTap: () {
         Get.to(
-              () => const ClinicDetails(),
+          () => const ClinicDetails(),
           transition: Transition.fadeIn,
           duration: const Duration(milliseconds: 300),
         );
@@ -224,69 +209,99 @@ class _ClinicsViewState extends State<ClinicsView> with SingleTickerProviderStat
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
           children: [
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-              child: Stack(
-                children: [
-                  Image.asset(
-                    imagePath,
-                    height: 90, // Reduced height
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                  ),
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF3498DB),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(
-                            Icons.local_hospital, // Changed from cyclone to clinic icon
-                            size: 14,
-                            color: Colors.white,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+            Expanded(
+              flex: 3,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                child: _buildClinicImage(clinic),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(10), // Reduced padding
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min, // To avoid extra space
-                children: [
-                  Text(
-                    name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: Color(0xFF2C3E50),
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      clinic.name ?? 'Unnamed Clinic',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFF2C3E50),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 3), // Reduced spacing
-                  Text(
-                    specialty,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
+                    Text(
+                      clinic.services.isNotEmpty 
+                          ? clinic.services.first 
+                          : 'General Services',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xFF7F8C8D),
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                ],
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF354AD9).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Text(
+                        'View Details',
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: Color(0xFF354AD9),
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildClinicImage(Clinic clinic) {
+    if (clinic.images.isNotEmpty) {
+      return CachedNetworkImage(
+        imageUrl: clinic.images.first,
+        fit: BoxFit.cover,
+        width: double.infinity,
+        height: double.infinity,
+        placeholder: (context, url) => Container(
+          color: Colors.grey[200],
+          child: const Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF354AD9)),
+            ),
+          ),
+        ),
+        errorWidget: (context, url, error) => _buildDefaultClinicImage(),
+      );
+    } else {
+      return _buildDefaultClinicImage();
+    }
+  }
+
+  Widget _buildDefaultClinicImage() {
+    return Container(
+      color: const Color(0xFFF5F6FA),
+      child: const Center(
+        child: Icon(
+          Icons.local_hospital,
+          size: 36,
+          color: Color(0xFF354AD9),
         ),
       ),
     );

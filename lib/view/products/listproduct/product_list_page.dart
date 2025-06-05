@@ -40,7 +40,6 @@ class ListProducts extends GetView<ListProductController> {
       final bool isExpanded = controller.isSearchExpanded.value;
 
       return Container(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -53,77 +52,121 @@ class ListProducts extends GetView<ListProductController> {
         ),
         child: Column(
           children: [
-            Row(
-              children: [
-                if (!isExpanded) ...[
-                  Text(
-                    'Shop',
-                    style: GoogleFonts.poppins(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF354AD9),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    'Products',
-                    style: GoogleFonts.poppins(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w400,
-                      color: const Color(0xFF333333),
-                    ),
-                  ),
-                  const Spacer(),
-                ],
-                if (isExpanded)
-                  Expanded(
-                    child: Container(
-                      height: 44,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: TextField(
-                        autofocus: true,
-                        decoration: InputDecoration(
-                          hintText: 'Search products...',
-                          hintStyle: GoogleFonts.poppins(
-                            color: Colors.grey[500],
-                            fontSize: 14,
-                          ),
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                          suffixIcon: IconButton(
-                            icon: const Icon(
-                              Icons.close,
-                              color: Colors.grey,
-                              size: 20,
-                            ),
-                            onPressed: () {
-                              controller.toggleSearch();
-                              controller.resetSearch();
-                            },
-                          ),
-                        ),
-                        onChanged: controller.searchProducts,
-                      ),
-                    ),
-                  )
-                else
+            // AppBar Section
+            Container(
+              padding: const EdgeInsets.fromLTRB(8, 16, 16, 12),
+              child: Row(
+                children: [
+                  // Back Button
                   IconButton(
                     icon: const Icon(
-                      Icons.search_rounded,
+                      Icons.arrow_back_ios,
                       color: Color(0xFF354AD9),
-                      size: 28,
+                      size: 22,
                     ),
-                    onPressed: controller.toggleSearch,
+                    onPressed: () => Navigator.of(context).pop(),
                   ),
-              ],
+                  
+                  // Title or Search Bar
+                  if (!isExpanded) ...[
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Shop Products',
+                            style: GoogleFonts.poppins(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFF1A1F38),
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Obx(() => Text(
+                            '${controller.filteredProducts.length} products',
+                            style: GoogleFonts.poppins(
+                              fontSize: 13,
+                              color: Colors.grey[600],
+                            ),
+                          )),
+                        ],
+                      ),
+                    ),
+                  ] else ...[
+                    Expanded(
+                      child: Container(
+                        height: 44,
+                        margin: const EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[50],
+                          borderRadius: BorderRadius.circular(22),
+                          border: Border.all(color: Colors.grey[200]!),
+                        ),
+                        child: TextField(
+                          autofocus: true,
+                          decoration: InputDecoration(
+                            hintText: 'Search products...',
+                            hintStyle: GoogleFonts.poppins(
+                              color: Colors.grey[500],
+                              fontSize: 14,
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                            prefixIcon: Icon(
+                              Icons.search,
+                              color: Colors.grey[400],
+                              size: 20,
+                            ),
+                          ),
+                          onChanged: controller.searchProducts,
+                        ),
+                      ),
+                    ),
+                  ],
+                  
+                  // Search/Close Button
+                  Container(
+                    margin: const EdgeInsets.only(left: 4),
+                    child: IconButton(
+                      icon: Icon(
+                        isExpanded ? Icons.close : Icons.search_rounded,
+                        color: const Color(0xFF354AD9),
+                        size: 24,
+                      ),
+                      onPressed: () {
+                        controller.toggleSearch();
+                        if (!isExpanded) {
+                          controller.resetSearch();
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
-            // if (!isExpanded)
-            //   const SizedBox(height: 12),
-            // if (!isExpanded)
-            //   _buildCategoryTabs(),
+            
+            // Search Results Info
+            if (isExpanded && controller.searchQuery.value.isNotEmpty)
+              Container(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      size: 16,
+                      color: Colors.grey[600],
+                    ),
+                    const SizedBox(width: 8),
+                    Obx(() => Text(
+                      '${controller.filteredProducts.length} results for "${controller.searchQuery.value}"',
+                      style: GoogleFonts.poppins(
+                        fontSize: 13,
+                        color: Colors.grey[600],
+                      ),
+                    )),
+                  ],
+                ),
+              ),
           ],
         ),
       );
