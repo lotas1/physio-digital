@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:physio_digital/view/notification/view_notificaion.dart';
+import 'package:physio_digital/view/notification/view_notification.dart';
 
 class NotificationCard extends StatelessWidget {
   final IconData icon;
