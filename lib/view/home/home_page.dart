@@ -7,115 +7,103 @@ import 'package:physio_digital/view/home/informative_articles.dart';
 import 'package:physio_digital/view/home/upcoming_events.dart';
 // import 'package:physio_digital/view/notification/list_notifications.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
-
-  @override
-  HomePageState createState() => HomePageState();
-}
-
-class HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
-  late final HomeController _homeController;
-
-  @override
-  void initState() {
-    super.initState();
-    _homeController = Get.find<HomeController>();
-  }
-
-  void _onTap(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-
-    switch (index) {
-      case 0:
-        Get.toNamed('/');
-        break;
-      case 1:
-        Get.toNamed('/marketplace');
-        break;
-      case 2:
-        Get.toNamed('/clinic');
-        break;
-      case 3:
-        Get.toNamed('/blog');
-        break;
-      case 4:
-        Get.toNamed('/profile');
-        break;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Modern Header with Gradient
-            _buildHeader(context),
-            // Main content
-            _buildMainContent(),
-          ],
-        ),
-      ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: _onTap,
-      ),
+      body: const _HomePageContent(),
+      bottomNavigationBar: CustomBottomNavigationBar.create(),
     );
   }
+}
 
-  Widget _buildHeader(BuildContext context) {
-    return RepaintBoundary(
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Theme.of(context).colorScheme.primary,
-              const Color(0xFF4A5FE7),
-            ],
+class _HomePageContent extends StatelessWidget {
+  const _HomePageContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        // Modern Header Sliver
+        const _HeaderSliver(),
+        
+        // Main Content Slivers
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          sliver: SliverList(
+            delegate: SliverChildListDelegate([
+              const RepaintBoundary(child: ClinicNearYou()),
+              const SizedBox(height: 20),
+              const RepaintBoundary(child: UpcomingEvents()),
+              const SizedBox(height: 20),
+              const RepaintBoundary(child: InformativeArticles()),
+              const SizedBox(height: 100), // Bottom spacing for nav bar
+            ]),
           ),
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(35),
-            bottomRight: Radius.circular(35),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
         ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 20, 24, 32),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Top Row: Profile & App Info
-                _buildProfileRow(),
-                const SizedBox(height: 28),
-                // Enhanced Search Bar
-                _buildSearchBar(context),
-                const SizedBox(height: 20),
-                // Quick Stats Row
-                _buildQuickStats(),
+      ],
+    );
+  }
+}
+
+class _HeaderSliver extends StatelessWidget {
+  const _HeaderSliver();
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: RepaintBoundary(
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Theme.of(context).colorScheme.primary,
+                const Color(0xFF4A5FE7),
               ],
             ),
+            borderRadius: const BorderRadius.only(
+              bottomLeft: Radius.circular(35),
+              bottomRight: Radius.circular(35),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          child: const SafeArea(
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(24, 20, 24, 32),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _ProfileSection(),
+                  SizedBox(height: 28),
+                  _SearchBarSection(),
+                  SizedBox(height: 20),
+                  _QuickStatsSection(),
+                ],
+              ),
+            ),
           ),
         ),
       ),
     );
   }
+}
 
-  Widget _buildProfileRow() {
+class _ProfileSection extends StatelessWidget {
+  const _ProfileSection();
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       children: [
         // Enhanced Profile Avatar
@@ -130,184 +118,243 @@ class HomePageState extends State<HomePage> {
               ],
             ),
           ),
-          child: const CircleAvatar(
-            radius: 28,
-            backgroundColor: Colors.white,
-            child: CircleAvatar(
-              radius: 25,
-              backgroundImage: AssetImage('assets/images/onboard.jpg'),
-            ),
-          ),
+          child: const _ProfileAvatar(),
         ),
         const SizedBox(width: 16),
         
         // Welcome Text with Cached Greeting
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Obx(() => Text(
-                _homeController.greeting,
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.9),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              )),
-              const SizedBox(height: 2),
-              const Text(
-                'Ready for your wellness journey?',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.3,
-                ),
-              ),
-            ],
-          ),
-        ),
+        const Expanded(child: _WelcomeText()),
         
         // App Logo/Icon
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(16),
+        const _AppIcon(),
+      ],
+    );
+  }
+}
+
+class _ProfileAvatar extends StatelessWidget {
+  const _ProfileAvatar();
+
+  @override
+  Widget build(BuildContext context) {
+    return const RepaintBoundary(
+      child: CircleAvatar(
+        radius: 28,
+        backgroundColor: Colors.white,
+        child: CircleAvatar(
+          radius: 25,
+          backgroundImage: AssetImage('assets/images/onboard.jpg'),
+        ),
+      ),
+    );
+  }
+}
+
+class _WelcomeText extends StatelessWidget {
+  const _WelcomeText();
+
+  @override
+  Widget build(BuildContext context) {
+    final homeController = Get.find<HomeController>();
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Obx(() => Text(
+          homeController.greeting,
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: 0.9),
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
           ),
-          child: const Icon(
-            Icons.healing,
+        )),
+        const SizedBox(height: 2),
+        const Text(
+          'Ready for your wellness journey?',
+          style: TextStyle(
             color: Colors.white,
-            size: 24,
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.3,
           ),
         ),
       ],
     );
   }
+}
 
-  Widget _buildSearchBar(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-          hintText: 'Search therapists, clinics, products...',
-          prefixIcon: Container(
-            padding: const EdgeInsets.all(14),
-            child: Icon(
-              Icons.search,
-              color: Theme.of(context).colorScheme.primary,
-              size: 22,
-            ),
-          ),
-          suffixIcon: Container(
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              Icons.tune,
-              color: Theme.of(context).colorScheme.primary,
-              size: 20,
-            ),
-          ),
-          hintStyle: TextStyle(
-            color: Colors.grey[500],
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
-          ),
-          filled: true,
-          fillColor: Colors.white,
-          contentPadding: const EdgeInsets.symmetric(
-            vertical: 16,
-            horizontal: 0,
-          ),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide.none,
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide.none,
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide(
-              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
-              width: 2,
-            ),
-          ),
-        ),
-        cursorColor: Theme.of(context).colorScheme.primary,
-      ),
-    );
-  }
+class _AppIcon extends StatelessWidget {
+  const _AppIcon();
 
-  Widget _buildQuickStats() {
-    return RepaintBoundary(
-      child: Row(
-        children: [
-          _buildQuickStat(
-            icon: Icons.local_hospital,
-            label: 'Clinics',
-            value: '50+',
-            color: Colors.orange,
-          ),
-          const SizedBox(width: 16),
-          _buildQuickStat(
-            icon: Icons.people,
-            label: 'Therapists',
-            value: '200+',
-            color: Colors.green,
-          ),
-          const SizedBox(width: 16),
-          _buildQuickStat(
-            icon: Icons.shopping_bag,
-            label: 'Products',
-            value: '1K+',
-            color: Colors.purple,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMainContent() {
+  @override
+  Widget build(BuildContext context) {
     return RepaintBoundary(
       child: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClinicNearYou(),        // Keep original placement
-            SizedBox(height: 20),
-            UpcomingEvents(),      // Keep original placement
-            SizedBox(height: 20),
-            InformativeArticles(), // Keep original placement
-          ],
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.15),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: const Icon(
+          Icons.healing,
+          color: Colors.white,
+          size: 24,
         ),
       ),
     );
   }
+}
 
-  Widget _buildQuickStat({
-    required IconData icon,
-    required String label,
-    required String value,
-    required Color color,
-  }) {
-    return Expanded(
+class _SearchBarSection extends StatelessWidget {
+  const _SearchBarSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return RepaintBoundary(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: TextField(
+          decoration: InputDecoration(
+            hintText: 'Search therapists, clinics, products...',
+            prefixIcon: _SearchIcon(Theme.of(context).colorScheme.primary),
+            suffixIcon: _FilterIcon(Theme.of(context).colorScheme.primary),
+            hintStyle: TextStyle(
+              color: Colors.grey[500],
+              fontSize: 15,
+              fontWeight: FontWeight.w400,
+            ),
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.symmetric(vertical: 16),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide.none,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide(
+                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                width: 2,
+              ),
+            ),
+          ),
+          cursorColor: Theme.of(context).colorScheme.primary,
+        ),
+      ),
+    );
+  }
+}
+
+class _SearchIcon extends StatelessWidget {
+  const _SearchIcon(this.color);
+  
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      child: Icon(
+        Icons.search,
+        color: color,
+        size: 22,
+      ),
+    );
+  }
+}
+
+class _FilterIcon extends StatelessWidget {
+  const _FilterIcon(this.color);
+  
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Icon(
+        Icons.tune,
+        color: color,
+        size: 20,
+      ),
+    );
+  }
+}
+
+class _QuickStatsSection extends StatelessWidget {
+  const _QuickStatsSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return const RepaintBoundary(
+      child: Row(
+        children: [
+          Expanded(
+            child: _QuickStatCard(
+              icon: Icons.local_hospital,
+              label: 'Clinics',
+              value: '50+',
+              color: Colors.orange,
+            ),
+          ),
+          SizedBox(width: 16),
+          Expanded(
+            child: _QuickStatCard(
+              icon: Icons.people,
+              label: 'Therapists',
+              value: '200+',
+              color: Colors.green,
+            ),
+          ),
+          SizedBox(width: 16),
+          Expanded(
+            child: _QuickStatCard(
+              icon: Icons.shopping_bag,
+              label: 'Products',
+              value: '1K+',
+              color: Colors.purple,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _QuickStatCard extends StatelessWidget {
+  const _QuickStatCard({
+    required this.icon,
+    required this.label,
+    required this.value,
+    required this.color,
+  });
+
+  final IconData icon;
+  final String label;
+  final String value;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return RepaintBoundary(
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
         decoration: BoxDecoration(
