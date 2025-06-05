@@ -101,7 +101,7 @@ class ClinicState extends State<Clinic> with SingleTickerProviderStateMixin {
                 Get.toNamed('/blog');
                 break;
               case 4:
-                Get.toNamed('/profile');
+                Get.toNamed('/about');
                 break;
             }
           },

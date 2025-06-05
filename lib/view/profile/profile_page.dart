@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:physio_digital/view/profile/about_section/about_page_details.dart';
+import 'package:physio_digital/view/profile/about_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -16,7 +16,7 @@ class ProfilePage extends StatelessWidget {
             ),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onTap: () {
-              Get.to(const AboutPageDetails());
+              Get.to(const AboutPage());
             },
           );
         } catch (e) {

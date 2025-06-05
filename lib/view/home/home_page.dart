@@ -35,7 +35,7 @@ class HomePageState extends State<HomePage> {
         Get.toNamed('/blog');
         break;
       case 4:
-        Get.toNamed('/profile');
+        Get.toNamed('/about');
         break;
     }
   }

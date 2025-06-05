@@ -48,7 +48,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               _buildNavItem(1, FontAwesomeIcons.store, homeController, primaryBlue, inactiveColor),
               _buildNavItem(2, FontAwesomeIcons.stethoscope, homeController, primaryBlue, inactiveColor),
               _buildNavItem(3, FontAwesomeIcons.book, homeController, primaryBlue, inactiveColor),
-              _buildNavItem(4, FontAwesomeIcons.houseChimneyMedical, homeController, primaryBlue, inactiveColor),
+              _buildNavItem(4, FontAwesomeIcons.infoCircle, homeController, primaryBlue, inactiveColor),
             ],
           ),
         ),

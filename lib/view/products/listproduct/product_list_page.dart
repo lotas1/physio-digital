@@ -441,7 +441,7 @@ class ListProducts extends GetView<ListProductController> {
             Get.toNamed('/blog');
             break;
           case 4:
-            Get.toNamed('/profile');
+            Get.toNamed('/about');
             break;
         }
       },

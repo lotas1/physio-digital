@@ -12,7 +12,7 @@ import 'package:physio_digital/view/products/listproduct/list_product_controller
 import 'package:physio_digital/controllers/home_controller.dart';
 import 'package:physio_digital/view/home/home_page.dart';
 import 'package:physio_digital/view/products/listproduct/product_list_page.dart';
-import 'package:physio_digital/view/profile/user_profile.dart';
+import 'package:physio_digital/view/profile/about_page.dart';
 import 'package:physio_digital/bindings/registration_binding.dart';
 import 'package:physio_digital/view/therapists/listTherapist/list_therapist_controller.dart';
 
@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/marketplace', page: () => const ListProducts()),
         GetPage(name: '/clinic', page: () => const Clinic()),
         GetPage(name: '/blog', page: () => const ListPostsPage()),
-        GetPage(name: '/profile', page: () => const UserProfile()),
+        GetPage(name: '/about', page: () => const AboutPage()),
       ],
       theme: lightMode,
       home: const HomePage(),

@@ -14,17 +14,17 @@ class AboutPhysio extends StatelessWidget {
           SectionTitle(title: 'Education'),
           SectionContent(
             content:
-                'NuStep Recumbent Cross Trainer T4R combines a natural sitting position with a smooth stepping motion to work all major muscle groups during exercise.',
+                'Master of Physiotherapy from the University of Health Sciences with extensive training in musculoskeletal therapy.',
           ),
-          SectionTitle(title: 'Education'),
+          SectionTitle(title: 'Experience'),
           SectionContent(
             content:
-                'NuStep Recumbent Cross Trainer T4R combines a natural sitting position with a smooth stepping motion to work all major muscle groups during exercise.',
+                'Over 10 years of clinical experience helping patients recover mobility and improve their quality of life.',
           ),
-          SectionTitle(title: 'Education'),
+          SectionTitle(title: 'Specializations'),
           SectionContent(
             content:
-                'NuStep Recumbent Cross Trainer T4R combines a natural sitting position with a smooth stepping motion to work all major muscle groups during exercise.',
+                'Sports injuries, post-operative rehabilitation, and chronic pain management.',
           ),
         ],
       ),
