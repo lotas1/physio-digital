@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:physio_digital/view/notification/Notificaion_card.dart';
+import 'package:physio_digital/view/notification/notification_card.dart';
 
 class ListNotifications extends StatelessWidget {
   const ListNotifications({super.key});
