@@ -4,7 +4,6 @@ export 'package:get/get.dart';
 export 'package:physio_digital/firebase_options.dart';
 export 'package:physio_digital/repository/product_repository.dart';
 export 'package:physio_digital/repository/therapist_repository.dart';
-export 'package:physio_digital/services/auth/auth_gate.dart';
 export 'package:physio_digital/bindings/registration_binding.dart';
 export 'package:physio_digital/controllers/home_controller.dart';
 export 'package:physio_digital/themes/light_mode.dart';

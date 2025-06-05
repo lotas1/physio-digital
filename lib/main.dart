@@ -4,7 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:physio_digital/repository/clinic_repository.dart';
 import 'package:physio_digital/repository/product_repository.dart';
 import 'package:physio_digital/repository/therapist_repository.dart';
-import 'package:physio_digital/services/auth/auth_gate.dart';
 import 'package:physio_digital/themes/light_mode.dart';
 import 'package:physio_digital/view/clinics/clinic.dart';
 import 'package:physio_digital/view/clinics/listclinic/list_clinic_controller.dart';
@@ -72,7 +71,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/profile', page: () => const UserProfile()),
       ],
       theme: lightMode,
-      home: const AuthGate(),
+      home: const HomePage(),
       initialBinding: RegistrationBinding(),
     );
   }
