@@ -71,8 +71,11 @@ class ListPostsPageState extends State<ListPostsPage> {
       body: SafeArea(
         child: Column(
           children: [
+            // Header
             _buildHeader(),
+            // Category List
             _buildCategoryList(),
+            // Recent Articles
             _buildRecentHeader(),
             // Posts list
             _buildPostsList(),
@@ -89,7 +92,7 @@ class ListPostsPageState extends State<ListPostsPage> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             offset: const Offset(0, 2),
             blurRadius: 6,
           ),
@@ -172,7 +175,7 @@ class ListPostsPageState extends State<ListPostsPage> {
               boxShadow: isActive
                   ? [
                 BoxShadow(
-                  color: const Color(0xFF354AD9).withOpacity(0.3),
+                  color: const Color(0xFF354AD9).withValues(alpha: 0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
                 )
@@ -308,7 +311,7 @@ class ListPostsPageState extends State<ListPostsPage> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -322,7 +325,7 @@ class ListPostsPageState extends State<ListPostsPage> {
               child: Container(
                 height: 140,
                 width: double.infinity,
-                color: _getCategoryColor(post['category']).withOpacity(0.2),
+                color: _getCategoryColor(post['category']).withValues(alpha: 0.2),
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
@@ -330,7 +333,7 @@ class ListPostsPageState extends State<ListPostsPage> {
                       child: Icon(
                         _getCategoryIcon(post['category']),
                         size: 64,
-                        color: _getCategoryColor(post['category']).withOpacity(0.5),
+                        color: _getCategoryColor(post['category']).withValues(alpha: 0.5),
                       ),
                     ),
                     Positioned(
