@@ -46,7 +46,7 @@ class ListPostsPage extends StatelessWidget {
       'category': 'Internships',
       'date': 'Feb 26, 2024',
       'description': 'Apply now for our comprehensive summer internship program in physiotherapy...',
-      'imageUrl': 'assets/images/logo-2.png',
+      'imageUrl': 'assets/images/app-logo.png',
     },
     {
       'title': 'Senior Physiotherapist Position Available',
