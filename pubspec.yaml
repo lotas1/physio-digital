@@ -64,9 +64,9 @@ dev_dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/images/logo-2.png"
+  image_path: "assets/images/app-logo.png"
   adaptive_icon_background: "#ffffff"  # Only for Android adaptive icons
-  adaptive_icon_foreground: "assets/images/logo-2.png"  # Only for Android adaptive icons
+  adaptive_icon_foreground: "assets/images/app-logo.png"  # Only for Android adaptive icons
   min_sdk_android: 33
   
 
@@ -143,7 +143,7 @@ flutter_native_splash:
 
   # The image parameter allows you to specify an image used in the splash screen.  It must be a
   # png file and should be sized for 4x pixel density.
-  image: assets/images/logo.png
+  image: assets/images/app-logo.png
   android_gravity: center
   ios_content_mode: center
   # The branding property allows you to specify an image used as branding in the splash screen.
@@ -179,7 +179,7 @@ flutter_native_splash:
     # 640 pixels in diameter.
     # App icon without an icon background: This should be 1152×1152 pixels, and fit within a circle
     # 768 pixels in diameter.
-    image: assets/images/logo.png
+    image: assets/images/app-logo.png
 
     # Splash screen background color.
     color: "#FFFFFF"

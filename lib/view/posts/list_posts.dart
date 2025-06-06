@@ -39,7 +39,7 @@ class ListPostsPage extends StatelessWidget {
       'category': 'Events',
       'date': 'Feb 28, 2024',
       'description': 'Learn about physiotherapy careers and meet practicing professionals...',
-      'imageUrl': 'assets/images/logo.png',
+              'imageUrl': 'assets/images/app-logo.png',
     },
     {
       'title': 'Summer Internship Program Applications Open',
