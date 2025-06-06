@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:physio_digital/model/therapist/therapist.dart';
 import 'package:physio_digital/view/therapists/listTherapist/list_therapist_controller.dart';
 import 'package:physio_digital/repository/therapist_repository.dart';
+import 'package:physio_digital/view/therapists/therapist_details.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -247,7 +248,7 @@ class TherapistCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // Navigate to therapist profile screen
-        // Get.to(() => TherapistProfileScreen(therapist: therapist));
+        Get.to(() => const TherapistProfileScreen());
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),

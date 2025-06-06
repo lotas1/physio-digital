@@ -5,6 +5,7 @@ import 'package:physio_digital/view/home/buttom_bar.dart';
 import 'package:physio_digital/view/home/clinic_near_you.dart';
 import 'package:physio_digital/view/home/informative_articles.dart';
 import 'package:physio_digital/view/home/upcoming_events.dart';
+import 'package:physio_digital/view/clinics/clinic.dart';
 // import 'package:physio_digital/view/notification/list_notifications.dart';
 
 class HomePage extends StatelessWidget {
@@ -304,10 +305,10 @@ class _QuickStatsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const RepaintBoundary(
+    return RepaintBoundary(
       child: Row(
         children: [
-          Expanded(
+          const Expanded(
             child: _QuickStatCard(
               icon: Icons.local_hospital,
               label: 'Clinics',
@@ -315,17 +316,22 @@ class _QuickStatsSection extends StatelessWidget {
               color: Colors.orange,
             ),
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Expanded(
-            child: _QuickStatCard(
-              icon: Icons.people,
-              label: 'Therapists',
-              value: '200+',
-              color: Colors.green,
+            child: GestureDetector(
+              onTap: () {
+                Get.to(() => const Clinic(initialTab: 0));
+              },
+              child: const _QuickStatCard(
+                icon: Icons.people,
+                label: 'Therapists',
+                value: '200+',
+                color: Colors.green,
+              ),
             ),
           ),
-          SizedBox(width: 16),
-          Expanded(
+          const SizedBox(width: 16),
+          const Expanded(
             child: _QuickStatCard(
               icon: Icons.shopping_bag,
               label: 'Products',

@@ -8,7 +8,9 @@ import '../therapists/listTherapist/list_therapist_view.dart';
 import 'clinic_view.dart';
 
 class Clinic extends StatefulWidget {
-  const Clinic({Key? key}) : super(key: key);
+  final int initialTab;
+  
+  const Clinic({Key? key, this.initialTab = 1}) : super(key: key);
 
   @override
   ClinicState createState() => ClinicState();
@@ -22,7 +24,7 @@ class ClinicState extends State<Clinic> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 2, vsync: this, initialIndex: widget.initialTab);
     _tabController.addListener(() {
       setState(() {});
     });
