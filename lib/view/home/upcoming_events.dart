@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:physio_digital/view/posts/view_post.dart';
 
 class UpcomingEvents extends StatelessWidget {
   const UpcomingEvents({Key? key}) : super(key: key);
@@ -26,25 +24,25 @@ class UpcomingEvents extends StatelessWidget {
             title,
             style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
           ),
-          // TextButton.icon(
-          //   onPressed: (){
-          //     // Get.to()
-          //   },
-          //   label: const Text(
-          //     'See all',
-          //     style: TextStyle(color: Color.fromARGB(255, 99, 99, 99)),
-          //   ),
-          //   icon: const Icon(Icons.arrow_forward, size: 16),
-          //   iconAlignment: IconAlignment.end,
-          //   style: TextButton.styleFrom(
-          //     iconColor: const Color.fromARGB(255, 99, 99, 99), // Text color
-          //     backgroundColor: Colors.transparent, // Button color
-          //     shape: RoundedRectangleBorder(
-          //       borderRadius: BorderRadius.circular(20),
-          //     ),
-          //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          //   ),
-          // ),
+          TextButton.icon(
+            onPressed: (){
+              // Get.to()
+            },
+            label: const Text(
+              'See all',
+              style: TextStyle(color: Color.fromARGB(255, 99, 99, 99)),
+            ),
+            icon: const Icon(Icons.arrow_forward, size: 16),
+            iconAlignment: IconAlignment.end,
+            style: TextButton.styleFrom(
+              iconColor: const Color.fromARGB(255, 99, 99, 99), // Text color
+              backgroundColor: Colors.transparent, // Button color
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            ),
+          ),
         ],
       ),
     );

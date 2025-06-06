@@ -28,23 +28,23 @@ class ClinicNearYou extends StatelessWidget {
             title,
             style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
           ),
-          // TextButton.icon(
-          //   onPressed: () {},
-          //   label: const Text(
-          //     'See all',
-          //     style: TextStyle(color: Color.fromARGB(255, 99, 99, 99)),
-          //   ),
-          //   icon: const Icon(Icons.arrow_forward, size: 16),
-          //   iconAlignment: IconAlignment.end,
-          //   style: TextButton.styleFrom(
-          //     iconColor: const Color.fromARGB(255, 99, 99, 99),
-          //     backgroundColor: Colors.transparent,
-          //     shape: RoundedRectangleBorder(
-          //       borderRadius: BorderRadius.circular(20),
-          //     ),
-          //     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          //   ),
-          // ),
+          TextButton.icon(
+            onPressed: () {},
+            label: const Text(
+              'See all',
+              style: TextStyle(color: Color.fromARGB(255, 99, 99, 99)),
+            ),
+            icon: const Icon(Icons.arrow_forward, size: 16),
+            iconAlignment: IconAlignment.end,
+            style: TextButton.styleFrom(
+              iconColor: const Color.fromARGB(255, 99, 99, 99),
+              backgroundColor: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            ),
+          ),
         ],
       ),
     );
@@ -99,7 +99,7 @@ class ClinicNearYou extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(0.7),
+                    color: Colors.grey.withValues(alpha: 0.7),
                     borderRadius: const BorderRadius.only(
                         bottomRight: Radius.circular(8)),
                   ),
@@ -119,7 +119,7 @@ class ClinicNearYou extends StatelessWidget {
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                       colors: [
-                        Colors.black.withOpacity(0.7),
+                        Colors.black.withValues(alpha: 0.7),
                         Colors.transparent,
                       ],
                     ),
