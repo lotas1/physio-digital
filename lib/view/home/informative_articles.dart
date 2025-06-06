@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:physio_digital/view/posts/list_posts.dart';
 
 class InformativeArticles extends StatelessWidget {
   const InformativeArticles({Key? key}) : super(key: key);
@@ -8,7 +10,9 @@ class InformativeArticles extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle('Informative Articles.', onViewAll: () {}),
+        _buildSectionTitle('Informative Articles.', onViewAll: () {
+          Get.to(() => const ListPostsPage(), transition: Transition.rightToLeft);
+        }),
         _buildArticleList(),
       ],
     );
@@ -25,9 +29,7 @@ class InformativeArticles extends StatelessWidget {
             style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
           ),
           TextButton.icon(
-            onPressed: () {
-              
-            },
+            onPressed: onViewAll,
             label: const Text(
               'See all',
               style: TextStyle(color: Color.fromARGB(255, 99, 99, 99)),
