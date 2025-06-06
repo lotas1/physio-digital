@@ -248,7 +248,7 @@ class TherapistCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // Navigate to therapist profile screen
-        Get.to(() => const TherapistProfileScreen());
+        Get.to(() => TherapistProfileScreen(therapist: therapist));
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
@@ -311,25 +311,39 @@ class TherapistCard extends StatelessWidget {
   }
 
   Widget _buildServicesTags() {
-    // Example specialties - in real app, get these from the therapist model
-    final specialties = ['Sports', 'Rehab'];
+    // Use the first 2 services from the therapist's services list
+    final servicesToShow = therapist.services.take(2).toList();
+    
+    if (servicesToShow.isEmpty) {
+      return const Text(
+        'No services listed',
+        style: TextStyle(
+          fontSize: 12,
+          color: Colors.grey,
+          fontStyle: FontStyle.italic,
+        ),
+      );
+    }
 
-    return Row(
-      children: specialties.map((specialty) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 4,
+      children: servicesToShow.map((service) {
         return Container(
-          margin: const EdgeInsets.only(right: 8),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
             color: const Color(0xFFEEF0FF),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
-            specialty,
+            service.length > 15 ? '${service.substring(0, 15)}...' : service,
             style: GoogleFonts.poppins(
-              fontSize: 11,
+              fontSize: 10,
               fontWeight: FontWeight.w500,
               color: const Color(0xFF354AD9),
             ),
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
           ),
         );
       }).toList(),

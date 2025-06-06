@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:physio_digital/model/therapist/therapist.dart';
 
 class ContactInfoSection extends StatelessWidget {
-  const ContactInfoSection({Key? key}) : super(key: key);
+  final Therapist therapist;
+  
+  const ContactInfoSection({Key? key, required this.therapist}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Contact Info',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
         ),
-        SizedBox(height: 8),
-        Text('+234-5455-45332'),
-        Text('johndoe@gmail.com'),
+        const SizedBox(height: 8),
+        Text(therapist.phone ?? 'Phone not provided'),
+        const SizedBox(height: 4),
+        Text(therapist.email ?? 'Email not provided'),
       ],
     );
   }

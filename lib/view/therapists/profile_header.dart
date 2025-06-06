@@ -1,47 +1,63 @@
 import 'package:flutter/material.dart';
+import 'package:physio_digital/model/therapist/therapist.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfileHeader extends StatelessWidget {
-  const ProfileHeader({Key? key}) : super(key: key);
+  final Therapist therapist;
+  
+  const ProfileHeader({Key? key, required this.therapist}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        // CircleAvatar(
-        //   // radius: 30,
-        //   backgroundImage:
-        //       AssetImage('assets/images/onboard.jpg'), // Add your image asset
-        // ),
         Container(
           width: 65,
           height: 65,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            image: DecorationImage(
-              image: AssetImage(
-                  'assets/images/onboard.jpg'), // Make sure this image exists in your assets
-              fit: BoxFit.cover,
-            ),
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
+            image: therapist.images.isNotEmpty
+                ? DecorationImage(
+                    image: CachedNetworkImageProvider(therapist.images.first),
+                    fit: BoxFit.cover,
+                  )
+                : const DecorationImage(
+                    image: AssetImage('assets/images/onboard.jpg'),
+                    fit: BoxFit.cover,
+                  ),
           ),
         ),
         const SizedBox(width: 16),
-        const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Physiotherapist'),
-            Text(
-              'Dr. Samantha Williams',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            Text('Awka, Nigeria'),
-            // Row(
-            //   children: [
-            //     Icon(Icons.star, color: Colors.orange),
-            //     Text('4.0'),
-            //   ],
-            // ),
-          ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                therapist.education ?? 'Physiotherapist',
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                therapist.name ?? 'Unknown',
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                therapist.location ?? 'Location not specified',
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

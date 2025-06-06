@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:physio_digital/model/therapist/therapist.dart';
 import 'package:physio_digital/view/therapists/availability_section.dart';
 import 'package:physio_digital/view/therapists/contact_info.dart';
 import 'package:physio_digital/view/therapists/location_section.dart';
@@ -9,7 +10,9 @@ import 'package:physio_digital/view/therapists/service_section.dart';
 // import 'package:physio_consult/views/user/therapist/shedule_appointmen.dart';
 
 class TherapistProfileScreen extends StatelessWidget {
-  const TherapistProfileScreen({Key? key}) : super(key: key);
+  final Therapist therapist;
+  
+  const TherapistProfileScreen({Key? key, required this.therapist}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,17 +33,17 @@ class TherapistProfileScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const ProfileHeader(),
+              ProfileHeader(therapist: therapist),
               const SizedBox(height: 16),
-              const ProfileDetails(),
+              ProfileDetails(therapist: therapist),
               const SizedBox(height: 16),
-              const ServicesSection(),
+              ServicesSection(therapist: therapist),
               const SizedBox(height: 16),
-              const AvailabilitySection(),
+              AvailabilitySection(therapist: therapist),
               const SizedBox(height: 16),
-              const LocationSection(),
+              LocationSection(therapist: therapist),
               const SizedBox(height: 16),
-              const ContactInfoSection(),
+              ContactInfoSection(therapist: therapist),
               const SizedBox(height: 16),
               // ReviewsSection(),
               // SizedBox(height: 16),

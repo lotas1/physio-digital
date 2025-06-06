@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:physio_digital/model/therapist/therapist.dart';
 
 class ProfileDetails extends StatelessWidget {
-  const ProfileDetails({Key? key}) : super(key: key);
+  final Therapist therapist;
+  
+  const ProfileDetails({Key? key, required this.therapist}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Background',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
-          'NStep Recumbent Cross Trainer T4R combines a natural sitting position with a smooth stepping motion to work all major muscle groups during exercise.',
+          therapist.about ?? 'No background information available.',
         ),
-        SizedBox(height: 8),
-        Text(
+        const SizedBox(height: 16),
+        const Text(
           'Education',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
-          'NStep Recumbent Cross Trainer T4R combines a natural sitting position with a smooth stepping motion to work all major muscle groups during exercise.',
+          therapist.education ?? 'No education information available.',
         ),
       ],
     );
