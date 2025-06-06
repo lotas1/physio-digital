@@ -1,11 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:physio_digital/model/clinic/clinic.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ClinicDetails extends StatelessWidget {
   final Clinic clinic;
   
   const ClinicDetails({Key? key, required this.clinic}) : super(key: key);
+
+  Future<void> _launchWhatsAppForAppointment(BuildContext context) async {
+    String services = clinic.services.isNotEmpty 
+        ? clinic.services.join(', ') 
+        : 'General Services';
+    
+    String availability = clinic.availability.isNotEmpty 
+        ? clinic.availability.join('\n') 
+        : 'Please inquire about availability';
+
+    String contactInfo = '';
+    if (clinic.phone != null && clinic.phone!.isNotEmpty) {
+      contactInfo += 'Phone: ${clinic.phone!}\n';
+    }
+    if (clinic.email != null && clinic.email!.isNotEmpty) {
+      contactInfo += 'Email: ${clinic.email!}\n';
+    }
+
+    final String whatsappUrl = "https://wa.me/+2348115789924/?text=" +
+        Uri.encodeComponent(
+          "🏥 CLINIC APPOINTMENT REQUEST\n\n"
+              "Clinic: ${clinic.name ?? 'Unnamed Clinic'}\n\n"
+              "Services: $services\n\n"
+              "Availability:\n$availability\n\n"
+              "Contact Information:\n$contactInfo\n"
+              "Description: ${clinic.description ?? 'No description available'}\n\n"
+              "I would like to schedule an appointment at this clinic. Please let me know the available slots and booking procedure.",
+        );
+
+    final Uri uri = Uri.parse(whatsappUrl);
+
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        throw 'Could not launch WhatsApp';
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: ${e.toString()}")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +101,7 @@ class ClinicDetails extends StatelessWidget {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => _launchWhatsAppForAppointment(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF354AD9),
                     foregroundColor: Colors.white,

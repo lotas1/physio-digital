@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:physio_digital/model/therapist/therapist.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:physio_digital/view/therapists/availability_section.dart';
 import 'package:physio_digital/view/therapists/contact_info.dart';
 import 'package:physio_digital/view/therapists/location_section.dart';
@@ -13,6 +14,53 @@ class TherapistProfileScreen extends StatelessWidget {
   final Therapist therapist;
   
   const TherapistProfileScreen({Key? key, required this.therapist}) : super(key: key);
+
+  Future<void> _launchWhatsAppForAppointment(BuildContext context) async {
+    String services = therapist.services.isNotEmpty 
+        ? therapist.services.join(', ') 
+        : 'General Physiotherapy';
+    
+    String availability = therapist.availability.isNotEmpty 
+        ? therapist.availability.join('\n') 
+        : 'Please inquire about availability';
+
+    String contactInfo = '';
+    if (therapist.phone != null && therapist.phone!.isNotEmpty) {
+      contactInfo += 'Phone: ${therapist.phone!}\n';
+    }
+    if (therapist.email != null && therapist.email!.isNotEmpty) {
+      contactInfo += 'Email: ${therapist.email!}\n';
+    }
+    if (therapist.location != null && therapist.location!.isNotEmpty) {
+      contactInfo += 'Location: ${therapist.location!}\n';
+    }
+
+    final String whatsappUrl = "https://wa.me/+2348115789924/?text=" +
+        Uri.encodeComponent(
+          "👩‍⚕️ THERAPIST APPOINTMENT REQUEST\n\n"
+              "Therapist: ${therapist.name ?? 'Unnamed Therapist'}\n\n"
+              "Services: $services\n\n"
+              "Education: ${therapist.education ?? 'Not specified'}\n\n"
+              "Availability:\n$availability\n\n"
+              "Contact Information:\n$contactInfo\n"
+              "About: ${therapist.about ?? 'No information available'}\n\n"
+              "I would like to schedule an appointment with this therapist. Please let me know the available slots and booking procedure.",
+        );
+
+    final Uri uri = Uri.parse(whatsappUrl);
+
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        throw 'Could not launch WhatsApp';
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error: ${e.toString()}")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +100,7 @@ class TherapistProfileScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                onPressed: (){},
+                onPressed: () => _launchWhatsAppForAppointment(context),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF354AD9),
                   padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20)
