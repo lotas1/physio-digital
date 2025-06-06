@@ -190,7 +190,7 @@ class ClinicsView extends GetView<ListClinicController> {
     return GestureDetector(
       onTap: () {
         Get.to(
-          () => const ClinicDetails(),
+          () => ClinicDetails(clinic: clinic),
           transition: Transition.fadeIn,
           duration: const Duration(milliseconds: 300),
         );

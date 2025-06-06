@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:physio_digital/model/clinic/clinic.dart';
 
 class ClinicDetails extends StatelessWidget {
-  const ClinicDetails({Key? key}) : super(key: key);
+  final Clinic clinic;
+  
+  const ClinicDetails({Key? key, required this.clinic}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +136,7 @@ class ClinicDetails extends StatelessWidget {
         Positioned(
           bottom: 24,
           left: 24,
+          right: 24,
           child: Row(
             children: [
               Container(
@@ -142,39 +147,66 @@ class ClinicDetails extends StatelessWidget {
                   border: Border.all(color: Colors.white, width: 2),
                   color: Colors.white,
                 ),
-                child: const Icon(
-                  Icons.local_hospital,
-                  color: Color(0xFF354AD9),
-                  size: 32,
-                ),
+                child: clinic.images.isNotEmpty
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: CachedNetworkImage(
+                          imageUrl: clinic.images.first,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => const Icon(
+                            Icons.local_hospital,
+                            color: Color(0xFF354AD9),
+                            size: 32,
+                          ),
+                          errorWidget: (context, url, error) => const Icon(
+                            Icons.local_hospital,
+                            color: Color(0xFF354AD9),
+                            size: 32,
+                          ),
+                        ),
+                      )
+                    : const Icon(
+                        Icons.local_hospital,
+                        color: Color(0xFF354AD9),
+                        size: 32,
+                      ),
               ),
               const SizedBox(width: 16),
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Dr Felix Clinic',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Row(
-                    children: [
-                      Icon(Icons.local_hospital, color: Colors.white, size: 16),
-                      SizedBox(width: 4),
-                      Text(
-                        'Orthopedic',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      clinic.name ?? 'Unnamed Clinic',
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
-                  ),
-                ],
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    if (clinic.services.isNotEmpty)
+                      Row(
+                        children: [
+                          const Icon(Icons.local_hospital, color: Colors.white, size: 16),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              clinic.services.first,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -189,7 +221,7 @@ class ClinicDetails extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Location & Contact',
+          'Contact Information',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
@@ -197,23 +229,20 @@ class ClinicDetails extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        _buildInfoRow(
-          Icons.location_on_outlined,
-          'First Street junction, Onitsha, Nigeria',
-          const Color(0xFF354AD9),
-        ),
-        const SizedBox(height: 12),
-        _buildInfoRow(
-          Icons.phone_outlined,
-          '+234-5455-45332',
-          const Color(0xFF354AD9),
-        ),
-        const SizedBox(height: 12),
-        _buildInfoRow(
-          Icons.email_outlined,
-          'johndoe@gmail.com',
-          const Color(0xFF354AD9),
-        ),
+        if (clinic.phone != null && clinic.phone!.isNotEmpty)
+          _buildInfoRow(
+            Icons.phone_outlined,
+            clinic.phone!,
+            const Color(0xFF354AD9),
+          ),
+        if (clinic.phone != null && clinic.phone!.isNotEmpty && clinic.email != null && clinic.email!.isNotEmpty)
+          const SizedBox(height: 12),
+        if (clinic.email != null && clinic.email!.isNotEmpty)
+          _buildInfoRow(
+            Icons.email_outlined,
+            clinic.email!,
+            const Color(0xFF354AD9),
+          ),
       ],
     );
   }
@@ -232,16 +261,20 @@ class ClinicDetails extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        Wrap(
-          spacing: 10.0,
-          runSpacing: 10.0,
-          children: [
-            _buildServiceChip('Massage therapy'),
-            _buildServiceChip('Acupuncture'),
-            _buildServiceChip('Physical Therapy'),
-            _buildServiceChip('Rehabilitation'),
-          ],
-        ),
+        if (clinic.services.isNotEmpty)
+          Wrap(
+            spacing: 10.0,
+            runSpacing: 10.0,
+            children: clinic.services.map((service) => _buildServiceChip(service)).toList(),
+          )
+        else
+          const Text(
+            'No services listed',
+            style: TextStyle(
+              color: Color(0xFF4A4E69),
+              fontSize: 15,
+            ),
+          ),
       ],
     );
   }
@@ -277,9 +310,9 @@ class ClinicDetails extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        const Text(
-          'Dr. Felix Clinic offers comprehensive physiotherapy services with state-of-the-art facilities and experienced professionals. Our approach focuses on personalized treatment plans to ensure optimal recovery and well-being for all patients.',
-          style: TextStyle(
+        Text(
+          clinic.description ?? 'No description available for this clinic.',
+          style: const TextStyle(
             color: Color(0xFF4A4E69),
             fontSize: 15,
             height: 1.5,
@@ -303,51 +336,32 @@ class ClinicDetails extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 16),
-        _buildInfoRow(
-          Icons.date_range,
-          'Mon - Sat: 8:00 AM - 6:00 PM',
-          const Color(0xFF354AD9),
-        ),
-        const SizedBox(height: 12),
-        _buildWeekdayAvailability(),
-      ],
-    );
-  }
-
-  Widget _buildWeekdayAvailability() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        _buildDayIndicator('M', true),
-        _buildDayIndicator('T', true),
-        _buildDayIndicator('W', true),
-        _buildDayIndicator('T', true),
-        _buildDayIndicator('F', true),
-        _buildDayIndicator('S', true),
-        _buildDayIndicator('S', false),
-      ],
-    );
-  }
-
-  Widget _buildDayIndicator(String day, bool available) {
-    return Container(
-      width: 36,
-      height: 36,
-      decoration: BoxDecoration(
-        color: available ? const Color(0xFFEEF0FB) : const Color(0xFFE5E5E5),
-        shape: BoxShape.circle,
-      ),
-      child: Center(
-        child: Text(
-          day,
-          style: TextStyle(
-            color: available ? const Color(0xFF354AD9) : const Color(0xFF9E9E9E),
-            fontWeight: FontWeight.w600,
+        if (clinic.availability.isNotEmpty)
+          Column(
+            children: clinic.availability
+                .map((schedule) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: _buildInfoRow(
+                        Icons.access_time,
+                        schedule,
+                        const Color(0xFF354AD9),
+                      ),
+                    ))
+                .toList(),
+          )
+        else
+          const Text(
+            'No availability information provided',
+            style: TextStyle(
+              color: Color(0xFF4A4E69),
+              fontSize: 15,
+            ),
           ),
-        ),
-      ),
+      ],
     );
   }
+
+
 
   Widget _buildInfoRow(IconData icon, String text, Color iconColor) {
     return Row(

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:physio_digital/view/clinics/clinic_profile/clinic_details.dart';
 
 class ClinicNearYou extends StatelessWidget {
   const ClinicNearYou({Key? key}) : super(key: key);
@@ -69,7 +68,7 @@ class ClinicNearYou extends StatelessWidget {
   Widget _buildClinicCard(String name, String distance, String imagePath) {
     return GestureDetector(
       onTap: () {
-        Get.to(const ClinicDetails());
+        Get.toNamed('/clinic');
       },
       child: Container(
         width: 200,
